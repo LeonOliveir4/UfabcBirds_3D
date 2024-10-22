@@ -1,7 +1,3 @@
-# UfabcBird---2D
-Projeto para a Disciplina de Computação Gráfica - UFABC
-
-
 # ABCg
 
 ![build workflow](https://github.com/hbatagelo/abcg/actions/workflows/build.yml/badge.svg)
