@@ -11,7 +11,7 @@ int main (int argc, char **argv) {
             .height = 800,
             .showFPS = false,
             .showFullscreenButton = false,
-            .title = "Flap bird",
+            .title = "Ufabc bird",
         });
         app.run(window);
     } catch (std::exception const &exception) {

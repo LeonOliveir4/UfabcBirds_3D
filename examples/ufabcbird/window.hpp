@@ -16,11 +16,14 @@ protected:
     void onResize(glm::ivec2 const &size)override;
     void onDestroy()override;
 
+public:
+    GameData m_gameData; 
+    
 private:
     glm::ivec2 m_viewportSize{};
     GLuint m_birdProgram{};
     Bird m_bird;
-    GameData m_gameData; 
+    
     abcg::Timer m_restartTimer;
 
     void restart();

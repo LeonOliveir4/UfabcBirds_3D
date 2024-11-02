@@ -10,16 +10,15 @@ void Window::onCreate() {
                                  {.source = assetsPath + "bird.frag",
                                   .stage = abcg::ShaderStage::Fragment}});
     std::cout << "Shader ok \n";
-    abcg::glClearColor(0, 0, 0, 1);
+    abcg::glClearColor(0.5f, 0.5f, 0.5f, 1);
 #if !defined(__EMSCRIPTEN__)
   abcg::glEnable(GL_PROGRAM_POINT_SIZE);
 #endif
     restart();
-    std::cout << "Create window ok \n";
 }
 
 void Window::restart() {
-    m_bird.create(m_birdProgram);
+    m_bird.create(m_birdProgram, m_gameData);
 }
 
 void Window::onEvent(SDL_Event const &event) {
@@ -36,17 +35,13 @@ void Window::onEvent(SDL_Event const &event) {
 
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
-
   m_bird.update(m_gameData, deltaTime);
-  std::cout << "Create update ok \n";
 }
 
 void Window::onPaint() {
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
-  std::cout << "Call m_bird.paint() \n";
   m_bird.paint();
-  std::cout << "Create paint ok \n";
 }
 
 void Window::onPaintUI() {
@@ -63,11 +58,20 @@ void Window::onPaintUI() {
         ImGui::Begin(" ", nullptr, flags);
         ImGui::PushItemWidth(50);
         ImGui::SetCursorPos(ImVec2(0, 0));
-        ImGui::SliderFloat("Sustein", &m_bird.m_sustein.y, -9.8f, 1.0f);  
+        ImGui::PushItemWidth(100);
+        ImGui::SliderFloat("Sustein", &m_bird.m_sustein.y, -10.0f, 10.0f);
+        ImGui::SetCursorPos(ImVec2(100, 0));
+        ImGui::SliderFloat("Flap time A", &m_bird.m_flapTimeA, 0.0f, 3.0f);
+        ImGui::SetCursorPos(ImVec2(300, 0));
+        ImGui::SliderFloat("Flap time B", &m_bird.m_flapTimeB, 0.0f, 3.0f);
+        ImGui::SetCursorPos(ImVec2(400, 0));
+        ImGui::SliderFloat("Flap power", &m_bird.m_flapPower.y, 0.0f, 100.0f);    
+        ImGui::SetCursorPos(ImVec2(0, 10));
+                ImGui::PushItemWidth(200);
+        ImGui::SliderFloat("Scale", &m_bird.m_scale, 0.0f, 5.0f);  
         ImGui::PopItemWidth(); 
         ImGui::End();
     }
-    std::cout << "Create paint ui ok \n";
 }
 
 void Window::onResize(glm::ivec2 const &size) {

@@ -8,7 +8,8 @@ enum class Input { Up };
 
 struct GameData {
     std::bitset<1> m_input;
-    glm::vec2 m_gravity{glm::vec2(0.f, 9.8f)};
+    glm::vec2 m_gravity{glm::vec2(0.f, -19.8f)};
+    glm::vec2 m_maxCoord{glm::vec2(20.f)};
     
 };
 

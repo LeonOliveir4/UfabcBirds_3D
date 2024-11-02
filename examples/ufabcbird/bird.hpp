@@ -6,17 +6,28 @@
 
 class Bird {
 public:
-    void create(GLuint program);
+    void create(GLuint program, GameData const &gamedata);
     void paint();
     void destroy();
     void update(GameData const &gamedata, float deltaTime);
+    glm::vec2 normalizeCoord(glm::vec2 coord, GameData const &gamedata);
+    void flap(float deltaTime);
 
+    bool  m_isFlapping{false};
+    float m_flapDuration{0.f};
+    float m_flapTimeA{0.0036};
+    float m_flapTimeB{0.500};
+    glm::vec2 m_flapPower{0.0f,11.0f};
+
+
+    double m_total_time{0.0};
     float m_rotation{};
     float m_scale{0.125f};
-    glm::vec2 m_translation{};
-    glm::vec2 m_gravity{};
     glm::vec2 m_velocity{};
-    glm::vec2 m_sustein{}; //propriedade de planar;
+    glm::vec2 m_realPosition{}; // Posicao no mundo real
+
+    glm::vec2 m_translation{};
+    glm::vec2 m_sustein{glm::vec2(0.0f,9.8f)}; //propriedade de planar;
     glm::vec4 m_color{1};
 
 private:
