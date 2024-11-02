@@ -1,17 +1,30 @@
 #ifndef WINDOW_HPP_
-#define WINDOW_HPP_
+#define WIDNOW_HPP_
 
 #include "abcgOpenGL.hpp"
 
+#include "bird.hpp"
+#include "gamedata.hpp"
+
 class Window : public abcg::OpenGLWindow {
 protected:
-  void onCreate() override;   // Inicialização da janela e configurações
-  void onPaintUI() override;    // Apenas desenhar a tela, sem elementos do jogo
-  void onResize(glm::ivec2 const &size) override; // Redimensionamento da janela
+    void onEvent(SDL_Event const &event)override;
+    void onCreate()override;
+    void onUpdate()override;
+    void onPaint()override;
+    void onPaintUI()override;
+    void onResize(glm::ivec2 const &size)override;
+    void onDestroy()override;
 
-  /*private:
-    void drawCloud(float x, float y);   // Função para desenhar nuvens simples
-    */
+private:
+    glm::ivec2 m_viewportSize{};
+    GLuint m_birdProgram{};
+    Bird m_bird;
+    GameData m_gameData; 
+    abcg::Timer m_restartTimer;
+
+    void restart();
 };
+
 
 #endif
