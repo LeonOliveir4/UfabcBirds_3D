@@ -16,7 +16,7 @@ void main() {
     }else if (fragColorIndex == 3) {
         outColor = vec4(0.0,0.0, 0.0, 1.0);
     }else if (fragColorIndex == 4) {
-        outColor = vec4(0.0,1.0, 0.0, 1.0);
+        outColor = vec4(0.0,0.0, 0.0, 1.0);
     }else {
         outColor = vec4(0.2, 0.2, 0.2, 1.0);
     }

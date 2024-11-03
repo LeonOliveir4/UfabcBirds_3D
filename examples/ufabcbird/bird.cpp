@@ -179,7 +179,7 @@ void Bird::paint() {
     abcg::glUseProgram(m_program);
 
     abcg::glBindVertexArray(m_VAO);
-    abcg::glUniform1i(m_flapLoc, m_isFlapping);
+    abcg::glUniform1i(m_flapLoc, m_flapWing);
     abcg::glUniform1f(m_scaleLoc, m_scale);
     abcg::glUniform2fv(m_translationLoc, 1,  &m_translation.x);
     
@@ -231,9 +231,13 @@ glm::vec2 Bird::normalizeCoord(glm::vec2 coord, GameData const &gamedata ) {
 
 void Bird::flap(float deltaTime) {
   if (m_flapDuration <= m_flapTimeA){
-    m_velocity = m_flapPower ;
+    m_flapWing = true;
+    m_velocity = m_flapPower;
   }
-  if (m_flapDuration >= m_flapTimeB) {
+  if (m_flapDuration >= m_flapTimeB){
+    m_flapWing = false;
+  }
+  if (m_flapDuration >= m_flapTimeB + 0.1f) {
     m_flapDuration = 0.0f;
     m_isFlapping = false;
   }

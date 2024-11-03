@@ -13,12 +13,14 @@ public:
     glm::vec2 normalizeCoord(glm::vec2 coord, GameData const &gamedata);
     void flap(float deltaTime);
 
+    bool m_flapWing{false};
     bool  m_isFlapping{false};
     float m_flapDuration{0.f};
     float m_flapTimeA{0.0036};
     float m_flapTimeB{0.500};
     glm::vec2 m_flapPower{0.0f,11.0f};
-    
+
+
     double m_total_time{0.0};
     float m_rotation{};
     float m_scale{0.125f};
