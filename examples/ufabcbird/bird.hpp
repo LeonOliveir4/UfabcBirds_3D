@@ -18,8 +18,7 @@ public:
     float m_flapTimeA{0.0036};
     float m_flapTimeB{0.500};
     glm::vec2 m_flapPower{0.0f,11.0f};
-
-
+    
     double m_total_time{0.0};
     float m_rotation{};
     float m_scale{0.125f};
@@ -28,16 +27,16 @@ public:
 
     glm::vec2 m_translation{};
     glm::vec2 m_sustein{glm::vec2(0.0f,9.8f)}; //propriedade de planar;
-    glm::vec4 m_color{1};
 
 private:
     GLuint m_program{};
     GLuint m_translationLoc{};
-    GLuint m_colorLoc{};
+    GLuint m_flapLoc{};
     GLuint m_scaleLoc{};
     
     GLuint m_VAO{};
     GLuint m_VBO{};
+    GLuint m_CBO{};
     GLuint m_EBO{};
 };
 #endif
