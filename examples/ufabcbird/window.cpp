@@ -41,8 +41,8 @@ void Window::onEvent(SDL_Event const &event) {
 
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
-  m_bird.update(m_gameData, deltaTime);
   m_bg.update(m_gameData, deltaTime);
+  m_bird.update(m_gameData, deltaTime);
 }
 
 void Window::onPaint() {
