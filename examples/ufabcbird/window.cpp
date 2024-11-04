@@ -9,6 +9,11 @@ void Window::onCreate() {
                                   .stage = abcg::ShaderStage::Vertex},
                                  {.source = assetsPath + "bird.frag",
                                   .stage = abcg::ShaderStage::Fragment}});
+    m_bgProgram =
+      abcg::createOpenGLProgram({{.source = assetsPath + "bg.vert",
+                                  .stage = abcg::ShaderStage::Vertex},
+                                 {.source = assetsPath + "bg.frag",
+                                  .stage = abcg::ShaderStage::Fragment}});
     std::cout << "Shader ok \n";
     abcg::glClearColor(0.5f, 0.5f, 0.5f, 1);
 #if !defined(__EMSCRIPTEN__)
@@ -19,6 +24,7 @@ void Window::onCreate() {
 
 void Window::restart() {
     m_bird.create(m_birdProgram, m_gameData);
+    m_bg.create(m_bgProgram, m_gameData);
 }
 
 void Window::onEvent(SDL_Event const &event) {
@@ -36,12 +42,15 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
   m_bird.update(m_gameData, deltaTime);
+  m_bg.update(m_gameData, deltaTime);
 }
 
 void Window::onPaint() {
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
+  m_bg.paint();
   m_bird.paint();
+  
 }
 
 void Window::onPaintUI() {
@@ -82,6 +91,7 @@ void Window::onResize(glm::ivec2 const &size) {
 
 void Window::onDestroy() {
   abcg::glDeleteProgram(m_birdProgram);
-
+  abcg::glDeleteProgram(m_bgProgram);
+  m_bg.destroy(); 
   m_bird.destroy();
 }

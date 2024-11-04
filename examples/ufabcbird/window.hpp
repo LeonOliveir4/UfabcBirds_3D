@@ -4,6 +4,7 @@
 #include "abcgOpenGL.hpp"
 
 #include "bird.hpp"
+#include "bg.hpp"
 #include "gamedata.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -22,7 +23,10 @@ public:
 private:
     glm::ivec2 m_viewportSize{};
     GLuint m_birdProgram{};
+    GLuint m_bgProgram{};
+
     Bird m_bird;
+    Bg m_bg;
     
     abcg::Timer m_restartTimer;
 
