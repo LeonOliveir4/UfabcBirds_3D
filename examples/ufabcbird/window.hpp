@@ -2,6 +2,7 @@
 #define WIDNOW_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "gamedata.hpp"
 
 #include "bird.hpp"
 #include "bg.hpp"
@@ -31,6 +32,7 @@ private:
     abcg::Timer m_restartTimer;
 
     void restart();
+    void checkCollisions();
 };
 
 

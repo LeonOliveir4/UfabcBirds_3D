@@ -5,12 +5,12 @@
 #include <glm/gtx/fast_trigonometry.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-void Bird::create(GLuint program, GameData const &gameData){
+void Bird::create(GLuint program, GameData const &gamedata){
     destroy();
 
     m_program = program;
     //O passaro sempre inicia no centro da tela// 
-    m_realPosition = glm::vec2(gameData.m_maxCoord / 2.f ); // Comeca no centro da tela, a 5m de altura
+    m_realPosition = glm::vec2(gamedata.m_maxCoord / 2.f ); // Comeca no centro da tela, a 5m de altura
     
     m_total_time = 0.0;
     m_scaleLoc = abcg::glGetUniformLocation(m_program, "scale");
@@ -170,12 +170,14 @@ void Bird::create(GLuint program, GameData const &gameData){
     abcg::glVertexAttribIPointer(colorIndexAttribute, 1, GL_INT, 0, (void*)0);
     abcg::glEnableVertexAttribArray(colorIndexAttribute);
 
-    //abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     abcg::glBindVertexArray(0);
 
 }
 
-void Bird::paint() {
+void Bird::paint(GameData const &gamedata) {
+    if (gamedata.m_state != State::Playing)
+      return;
+    
     abcg::glUseProgram(m_program);
 
     abcg::glBindVertexArray(m_VAO);
@@ -198,7 +200,8 @@ void Bird::destroy() {
 
 void Bird::update(GameData const &gamedata, float deltaTime){
     // Apply 
-  if (gamedata.m_input[gsl::narrow<size_t>(Input::Up)]) {
+  if (gamedata.m_input[gsl::narrow<size_t>(Input::Up)] && 
+      gamedata.m_state == State::Playing) {
     std::cout << "up" <<"\n";
     m_isFlapping = true;
   }
@@ -206,6 +209,7 @@ void Bird::update(GameData const &gamedata, float deltaTime){
   if (m_isFlapping){
     flap(deltaTime);
   }
+  std::cout << "flapping: " << static_cast<int>(m_isFlapping) << "\n";
 
   if (m_realPosition.y > 0.0f) {
     m_velocity += (gamedata.m_gravity + m_sustein) * deltaTime;
@@ -221,6 +225,7 @@ void Bird::update(GameData const &gamedata, float deltaTime){
   std::cout << "real position: " << m_realPosition.x << "," << m_realPosition.y << "\n";
   std::cout << "normalized position: " << m_translation.x << "," << m_translation.y << "\n";
   std::cout << "Velocity: " << m_velocity.x << "," << m_velocity.y << "\n";
+  std::cout << "state do jogo: " << static_cast<int>(gamedata.m_state) << "\n";
   std::cout << "Total time until bird fall to the ground:" << m_total_time << "\n"; 
 }
 

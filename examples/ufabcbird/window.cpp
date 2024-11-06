@@ -4,6 +4,7 @@
 void Window::onCreate() {
     auto const assetsPath{abcg::Application::getAssetsPath()};
     std::cout << "Initialize shaders \n";
+    std::cout << "estado do jogo: " << static_cast<char>(m_gameData.m_state);
     m_birdProgram =
       abcg::createOpenGLProgram({{.source = assetsPath + "bird.vert",
                                   .stage = abcg::ShaderStage::Vertex},
@@ -23,6 +24,8 @@ void Window::onCreate() {
 }
 
 void Window::restart() {
+    m_gameData.m_state = State::Playing;
+    std::cout << "estado do jogo restart: " << static_cast<int>(m_gameData.m_state) << "\n";
     m_bird.create(m_birdProgram, m_gameData);
     m_bg.create(m_bgProgram, m_gameData);
 }
@@ -40,16 +43,26 @@ void Window::onEvent(SDL_Event const &event) {
 }
 
 void Window::onUpdate() {
+  if (m_gameData.m_state != State::Playing &&
+      m_restartTimer.elapsed() > 3) {
+    restart();
+    return;
+  }
+
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
   m_bg.update(m_gameData, deltaTime);
   m_bird.update(m_gameData, deltaTime);
+
+  if (m_gameData.m_state == State::Playing) {
+    checkCollisions();
+  }
 }
 
 void Window::onPaint() {
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
   m_bg.paint();
-  m_bird.paint();
+  m_bird.paint(m_gameData);
   
 }
 
@@ -78,7 +91,12 @@ void Window::onPaintUI() {
         ImGui::SetCursorPos(ImVec2(0, 10));
                 ImGui::PushItemWidth(200);
         ImGui::SliderFloat("Scale", &m_bird.m_scale, 0.0f, 5.0f);  
-        ImGui::PopItemWidth(); 
+        ImGui::PopItemWidth();
+
+        if (m_gameData.m_state == State::GameOver) {
+          ImGui::Text("Game Over!");
+        }
+
         ImGui::End();
     }
 }
@@ -94,4 +112,18 @@ void Window::onDestroy() {
   abcg::glDeleteProgram(m_bgProgram);
   m_bg.destroy(); 
   m_bird.destroy();
+}
+
+void Window::checkCollisions() {
+   glm::vec2 birdPosition = m_bird.m_translation;
+
+  // Definir limites de colisão (supõe-se que a tela está normalizada de -1.0 a 1.0)
+  float topLimit = 1.0f;
+  float bottomLimit = -1.0f;
+  
+  // Verifica se o pássaro ultrapassou os limites superior ou inferior
+  if (birdPosition.y >= topLimit || birdPosition.y <= bottomLimit) {
+    m_gameData.m_state = State::GameOver;
+    std::cout << "Colisão detectada! Game Over.\n";
+  }
 }
