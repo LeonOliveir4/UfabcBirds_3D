@@ -40,20 +40,20 @@ void Window::onEvent(SDL_Event const &event) {
     if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)
       m_gameData.m_input.reset(gsl::narrow<size_t>(Input::Up));
   }
+
+  // Adiciona a tecla R para reiniciar o jogo se estiver no estado GameOver
+    if (event.key.keysym.sym == SDLK_r && m_gameData.m_state == State::GameOver) {
+      restart();
+    }
 }
 
 void Window::onUpdate() {
-  if (m_gameData.m_state != State::Playing &&
-      m_restartTimer.elapsed() > 3) {
-    restart();
-    return;
-  }
-
-  auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
-  m_bg.update(m_gameData, deltaTime);
-  m_bird.update(m_gameData, deltaTime);
-
   if (m_gameData.m_state == State::Playing) {
+    auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
+    m_bg.update(m_gameData, deltaTime);
+    m_bird.update(m_gameData, deltaTime);
+
+    // Verifica colisões apenas enquanto o jogo está no estado Playing
     checkCollisions();
   }
 }
@@ -94,7 +94,20 @@ void Window::onPaintUI() {
         ImGui::PopItemWidth();
 
         if (m_gameData.m_state == State::GameOver) {
+          ImGui::Begin("Game Over", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
+          // Cria uma janela centralizada com tamanho automático para o texto
+          ImGui::SetNextWindowSize(ImVec2(0, 0));  // Deixa o tamanho da janela adaptável
+          ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x / 2, m_viewportSize.y / 2), 
+                                  ImGuiCond_Always, ImVec2(0.5f, 0.5f)); // Centraliza a janela na tela
+          // Define a cor vermelha e o tamanho maior para o texto
+          ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Cor vermelha
+          ImGui::SetWindowFontScale(2.0f); // Aumenta o tamanho do texto
           ImGui::Text("Game Over!");
+          ImGui::Text("Pressione 'R' para reiniciar");
+          // Restaura o estilo padrão
+          ImGui::PopStyleColor();
+          ImGui::SetWindowFontScale(1.0f); // Volta ao tamanho normal
+          ImGui::End();
         }
 
         ImGui::End();
