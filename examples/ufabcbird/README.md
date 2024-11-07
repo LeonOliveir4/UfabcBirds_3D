@@ -1,5 +1,5 @@
 <div align="center">
-# UfabcBirds - Relatório do Projeto
+<h1>UfabcBirds - Relatório do Projeto</h1>
 <img src="772ecb68-7d48-4e63-9a5d-90fb9d1e49e6.jpg" alt="Imagem do projeto">
 </div>
 
