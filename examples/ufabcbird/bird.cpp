@@ -249,3 +249,12 @@ void Bird::flap(float deltaTime) {
   m_flapDuration += deltaTime;
 
 }
+
+void Bird::setFlap() {
+  if (!m_isFlapping) {  // Verifica se o pássaro já não está no meio de um flap
+    m_flapWing = true;
+    m_velocity = m_flapPower;
+    m_isFlapping = true;  // Inicia o ciclo de batida de asas
+    m_flapDuration = 0.0f; // Reinicia o tempo de duração do flap
+  }
+}

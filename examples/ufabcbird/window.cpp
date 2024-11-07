@@ -50,6 +50,9 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onUpdate() {
   if (m_gameData.m_state == State::Playing) {
     auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
+    if (m_gameData.m_input.test(static_cast<size_t>(Input::Up))) {
+      m_bird.setFlap();
+    }
     m_bg.update(m_gameData, deltaTime);
     m_bird.update(m_gameData, deltaTime);
 
