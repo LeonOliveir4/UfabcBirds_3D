@@ -16,7 +16,7 @@ public:
     bool m_flapWing{false};
     bool  m_isFlapping{false};
     float m_flapDuration{0.f};
-    float m_flapTimeA{0.0036};
+    float m_flapTimeA{0.036};
     float m_flapTimeB{0.500};
     glm::vec2 m_flapPower{0.0f,11.0f};
 

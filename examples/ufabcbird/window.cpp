@@ -14,6 +14,11 @@ void Window::onCreate() {
                                   .stage = abcg::ShaderStage::Vertex},
                                  {.source = assetsPath + "bg.frag",
                                   .stage = abcg::ShaderStage::Fragment}});
+    m_pipeProgram =
+      abcg::createOpenGLProgram({{.source = assetsPath + "pipe.vert",
+                                  .stage = abcg::ShaderStage::Vertex},
+                                 {.source = assetsPath + "pipe.frag",
+                                  .stage = abcg::ShaderStage::Fragment}});
     std::cout << "Shader ok \n";
     abcg::glClearColor(0.5f, 0.5f, 0.5f, 1);
 #if !defined(__EMSCRIPTEN__)
@@ -25,6 +30,7 @@ void Window::onCreate() {
 void Window::restart() {
     m_bird.create(m_birdProgram, m_gameData);
     m_bg.create(m_bgProgram, m_gameData);
+    m_pipes.create(m_pipeProgram, m_gameData);
 }
 
 void Window::onEvent(SDL_Event const &event) {
@@ -43,12 +49,14 @@ void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
   m_bg.update(m_gameData, deltaTime);
   m_bird.update(m_gameData, deltaTime);
+  m_pipes.update(m_gameData, deltaTime);
 }
 
 void Window::onPaint() {
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
   m_bg.paint();
+  m_pipes.paint();
   m_bird.paint();
   
 }
@@ -92,6 +100,8 @@ void Window::onResize(glm::ivec2 const &size) {
 void Window::onDestroy() {
   abcg::glDeleteProgram(m_birdProgram);
   abcg::glDeleteProgram(m_bgProgram);
+  abcg::glDeleteProgram(m_pipeProgram);
   m_bg.destroy(); 
+  m_pipes.destroy();
   m_bird.destroy();
 }
