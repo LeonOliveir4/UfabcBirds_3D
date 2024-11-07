@@ -58,4 +58,9 @@ O projeto está organizado da seguinte maneira:
 ## Como Executar o Projeto
 Clone este repositório no seu ambiente local:
 ```bash
-git clone [URL do repositório]
+git clone [[URL do repositório]](https://github.com/LeonOliveir4/UfabcBirds_2D/tree/CenarioInicial_FlappyBird)
+```
+build:
+```bash
+./build.sh (linux); build.bat (windows)
+```
