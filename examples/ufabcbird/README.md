@@ -1,6 +1,6 @@
-# UfabcBirds - Relatório do Projeto
+
 <p align="center">
-  <img src="772ecb68-7d48-4e63-9a5d-90fb9d1e49e6.jpg" alt="Texto alternativo para a imagem">
+  <img src="772ecb68-7d48-4e63-9a5d-90fb9d1e49e6.jpg" alt="# UfabcBirds - Relatório do Projeto">
 </p>
 
 **Disciplina**: Computação Gráfica  
