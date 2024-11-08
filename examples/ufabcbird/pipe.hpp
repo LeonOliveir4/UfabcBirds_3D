@@ -42,10 +42,6 @@ private:
     GLuint m_program{};
     GLuint m_translationLoc{};
     GLuint m_colorLoc{};
-
-    GLuint m_VAO{};
-    GLuint m_VBO{};
-
     std::default_random_engine m_randomEngine;
     std::uniform_real_distribution<float> m_randomDist{-3.0f, 3.0f};
 };
