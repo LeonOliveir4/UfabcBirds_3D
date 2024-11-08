@@ -1,0 +1,285 @@
+#version 300 es
+
+precision mediump float;
+
+
+uniform vec2 resolution;
+uniform float time;
+out vec4 outColor;
+const float cloudscale = 1.1;
+const float speed = 0.003;
+const float clouddark = 0.5;
+const float cloudlight = 0.3;
+const float cloudcover = 0.2;
+const float cloudalpha = 8.0;
+const float skytint = 0.5;
+const vec3 skycolour1 = vec3(0.2, 0.4, 0.6);
+const vec3 skycolour2 = vec3(0.4, 0.7, 1.0);
+
+const mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
+
+vec2 hash( vec2 p ) {
+	p = vec2(dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)));
+	return -1.0 + 2.0*fract(sin(p)*43758.5453123);
+}
+
+float noise( in vec2 p ) {
+    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+    const float K2 = 0.211324865; // (3-sqrt(3))/6;
+	vec2 i = floor(p + (p.x+p.y)*K1);	
+    vec2 a = p - i + (i.x+i.y)*K2;
+    vec2 o = (a.x>a.y) ? vec2(1.0,0.0) : vec2(0.0,1.0); //vec2 of = 0.5 + 0.5*vec2(sign(a.x-a.y), sign(a.y-a.x));
+    vec2 b = a - o + K2;
+	vec2 c = a - 1.0 + 2.0*K2;
+    vec3 h = max(0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
+	vec3 n = h*h*h*h*vec3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
+    return dot(n, vec3(70.0));	
+}
+
+float fbm(vec2 n) {
+	float total = 0.0, amplitude = 0.1;
+	for (int i = 0; i < 7; i++) {
+		total += noise(n) * amplitude;
+		n = m * n;
+		amplitude *= 0.4;
+	}
+	return total;
+}
+
+// -----------------------------------------------
+
+void main() {
+    vec2 fragCoord = gl_FragCoord.xy;
+    vec2 p = gl_FragCoord.xy / vec2(800,800);
+	vec2 uv = p*vec2(800/800, 1.0);    
+    float TimeA = time * speed;
+    float q = fbm(uv * cloudscale * 0.5);
+    
+    //ridged noise shape
+	float r = 0.0;
+	uv *= cloudscale;
+    uv -= q - TimeA;
+    float weight = 0.8;
+    for (int i=0; i<8; i++){
+		r += abs(weight*noise( uv ));
+        uv = m*uv + TimeA;
+		weight *= 0.7;
+    }
+    
+    //noise shape
+	float f = 0.0;
+    uv = p*vec2(resolution.x/resolution.y,1.0);
+	uv *= cloudscale;
+    uv -= q - TimeA;
+    weight = 0.7;
+    for (int i=0; i<8; i++){
+		f += weight*noise( uv );
+        uv = m*uv + TimeA;
+		weight *= 0.6;
+    }
+    
+    f *= r + f;
+    
+    //noise colour
+    float c = 0.0;
+    TimeA = time * speed * 2.0;
+    uv = p*vec2(resolution.x/resolution.y,1.0);
+	uv *= cloudscale*2.0;
+    uv -= q - TimeA;
+    weight = 0.4;
+    for (int i=0; i<7; i++){
+		c += weight*noise( uv );
+        uv = m*uv + TimeA;
+		weight *= 0.6;
+    }
+    
+    //noise ridge colour
+    float c1 = 0.0;
+    TimeA = time * speed * 3.0;
+    uv = p*vec2(resolution.x/resolution.y,1.0);
+	uv *= cloudscale*3.0;
+    uv -= q - TimeA;
+    weight = 0.4;
+    for (int i=0; i<7; i++){
+		c1 += abs(weight*noise( uv ));
+        uv = m*uv + TimeA;
+		weight *= 0.6;
+    }
+	
+    c += c1;
+    
+    vec3 skycolour = mix(skycolour2, skycolour1, p.y);
+    vec3 cloudcolour = vec3(1.1, 1.1, 0.9) * clamp((clouddark + cloudlight*c), 0.0, 1.0);
+   
+    f = cloudcover + cloudalpha*f*r;
+    
+    vec3 result = mix(skycolour, clamp(skytint * skycolour + cloudcolour, 0.0, 1.0), clamp(f + c, 0.0, 1.0));
+    
+	outColor = vec4( result, 1.0 );
+}#version 300 es
+
+precision mediump float;
+
+in vec4 fragColor;
+in vec2 resolution;
+out vec4 outColor;
+//gl_FragCoord
+void main() { outColor = fragColor; }#version 300 es
+
+#define NUM_CLOUDS 10
+#define CLOUD_PARTS 10
+#define SPEED -0.04
+
+#define saturate(x) clamp(x,0.,1.)
+#define rgb(r,g,b) (vec3(r,g,b)/255.)
+
+precision mediump float;
+
+uniform vec2 resolution;
+uniform float time;
+out vec4 outColor;
+
+float rand(float x){ 
+    return fract(sin(x) * 71.5413); 
+}
+float rand(vec3 x){ 
+    return rand(dot(x, vec3(1.4251, 1.5128, 1.7133))); 
+}
+
+float noise(vec3 x){
+    vec3 i = floor(x);
+    vec3 f = x-i;
+    f *= f*(3.-2.*f);
+    return mix(
+        mix(
+            mix(rand(i+vec3(0,0,0)), rand(i+vec3(1,0,0)), f.x),
+        	mix(rand(i+vec3(0,1,0)), rand(i+vec3(1,1,0)), f.x),
+            f.y),
+        mix(
+            mix(rand(i+vec3(0,0,1)), rand(i+vec3(1,0,1)), f.x),
+        	mix(rand(i+vec3(0,1,1)), rand(i+vec3(1,1,1)), f.x),
+            f.y),
+        f.z);
+}
+
+float fbm(vec3 x){
+    float r = 0.0, s = 1.0, w = 1.0;
+    for (int i=0; i<5; i++)
+    {
+        s *= 2.0;
+        w *= 0.5;
+        r += w * noise(s * x);
+    }
+    return r;
+}
+
+float cloud(int i, vec2 c, float r, vec2 p, float ch){
+    vec2 x = p - c;
+    x.y *= 3.;
+    float l = length(x);
+    float n = 0.1 + 0.9*fbm(vec3(x.x*ch,x.y*ch, float(i) + time*SPEED*5.));
+    
+    return l*n - r;
+}
+
+vec3 render(vec2 uv)
+{
+    // sky
+    vec3 sky = mix(rgb(186, 240, 255), rgb(59, 182, 217), uv.y);
+    vec3 color = sky;
+
+    // clouds only in upper half of screen
+    if (uv.y > 0.5) {
+        float dmin = 1.;
+        for (int i=0; i<NUM_CLOUDS; i++) {
+            vec2 pos0 = vec2(-1, -1) + vec2(2, 2) * vec2(rand(float(i)+234.230), rand(float(i)+173.1523));
+            pos0.x += SPEED * time * (1. + rand(float(float(i)*34.35)));
+            pos0.x = mod(pos0.x + 1.0, 2.0) - 1.0;
+            pos0.x *= 3.;
+            pos0.y = pos0.y * 0.8 + 0.5;
+            for (int j=0; j<CLOUD_PARTS; j++) {
+                vec2 pos = pos0;
+                int id = i*CLOUD_PARTS+j;
+                float s = 0.7;
+                pos.x += (rand(float(id)+5.3451)-0.5)*0.5*s;
+                pos.y += (rand(float(id)+11.7013)-0.5)*0.2*s;
+                float d = cloud(id, pos, s*0.15*(rand(float(id))+1.), uv, 2.5/s);
+                if (d<dmin) dmin = d;
+            }
+        }
+        if (dmin<0.) {
+            float a1 = smoothstep(0.0, -0.03, dmin);
+            float a2 = smoothstep(-0.02, -0.12, dmin);
+            vec3 col = mix(vec3(1,1,1), sky*0.4+0.6, a2);
+            color = mix(color, col, a1);
+        }
+    }
+    
+    return color;
+}
+
+void main(){
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    uv.x -= 0.5;
+    uv.x *= resolution.x / resolution.y;
+    outColor = vec4(render(uv), 1.0);
+}
+#version 300 es
+
+layout (location = 0) in vec2 inPosition;
+
+uniform mediump float time;
+out vec4 fragColor;
+void main() {
+    gl_Position = vec4(inPosition, 1.0, 1);
+    fragColor = vec4(1.0f);
+}
+#version 300 es
+
+precision mediump float;
+
+flat in int fragColorIndex;
+
+out vec4 outColor;
+
+void main() { 
+    if (fragColorIndex == 0) {
+        outColor = vec4(1.0,0.843, 0.0, 1.0);
+    }else if (fragColorIndex == 1) {
+        outColor = vec4(1.0,0.439, 0.0, 1.0);
+    }else if (fragColorIndex == 2) {
+        outColor = vec4(1.0,1.0, 1.0, 1.0);
+    }else if (fragColorIndex == 3) {
+        outColor = vec4(0.0,0.0, 0.0, 1.0);
+    }else if (fragColorIndex == 4) {
+        outColor = vec4(0.0,0.0, 0.0, 1.0);
+    }else {
+        outColor = vec4(0.2, 0.2, 0.2, 1.0);
+    }
+}#version 300 es
+
+layout (location = 0) in vec2 inPosition;
+layout (location = 1) in int inColorIndex;
+
+uniform float scale;
+uniform bool flap;
+uniform vec2 translation;
+
+flat out int fragColorIndex;
+void main() {
+    vec2 newPosition = inPosition;
+    if(flap == true && inColorIndex == 4) {
+        if( inPosition == vec2(-0.52f,0.44f)) { //Z
+            newPosition = vec2(-0.2f,-0.5f);
+        }if( inPosition == vec2(-0.06,0.61f)) { //Z2
+            newPosition = vec2(0.18f,-0.52f);
+        }if( inPosition == vec2(-0.51f,0.19f)) { //W
+            newPosition = vec2(-0.37f,-0.26f);
+        }if( inPosition == vec2(-0.08f,0.23f)) { //V
+            newPosition = vec2(-0.07f, 0.08f);
+        }
+    }
+    newPosition = newPosition * scale + translation;
+    gl_Position = vec4(newPosition, 0, 1);
+    fragColorIndex= inColorIndex;
+}
