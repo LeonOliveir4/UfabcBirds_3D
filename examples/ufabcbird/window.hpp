@@ -34,6 +34,13 @@ private:
     
     abcg::Timer m_restartTimer;
 
+    bool m_showPopup{true};
+    float m_popupTimeElapsed{0.0f};
+    std::string m_popupText;
+    std::string m_displayedText;
+    size_t m_currentCharIndex{0};
+    float m_textDisplaySpeed{0.05f};
+
     void restart();
 };
 

@@ -37,6 +37,17 @@ void Window::restart() {
     m_bird.create(m_birdProgram, m_gameData);
     m_bg.create(m_bgProgram, m_gameData);
     m_pipes.create(m_pipeProgram, m_gameData);
+
+    // Configurações do popup
+    m_showPopup = true;
+    m_popupTimeElapsed = 0.0f;
+    m_currentCharIndex = 0;
+    m_popupText = "Este é o Tucano!\n"
+                  "Você sabia?\n"
+                  "Os tucanos vivem nas florestas tropicais da América do Sul!\n"
+                  "Eles têm bicos grandes e coloridos, que ajudam a pegar frutas e pequenos insetos.\n"
+                  "Curiosidade: apesar do tamanho do bico, ele é leve e o tucano consegue voar facilmente.";
+    m_displayedText.clear(); // Inicialmente, o texto exibido está vazio
 }
 
 void Window::onEvent(SDL_Event const &event) {
@@ -64,6 +75,19 @@ void Window::onUpdate() {
     m_bg.update(deltaTime);
     m_bird.update(m_gameData, deltaTime);
     m_pipes.update(m_gameData, deltaTime);
+
+    if (m_showPopup) {
+            m_popupTimeElapsed += deltaTime;
+            if (m_popupTimeElapsed >= m_textDisplaySpeed && m_currentCharIndex < m_popupText.size()) {
+                m_displayedText += m_popupText[m_currentCharIndex];
+                ++m_currentCharIndex;
+                m_popupTimeElapsed = 0.0f;
+            }
+
+            if (m_currentCharIndex >= m_popupText.size() && m_popupTimeElapsed >= 5.0f) {
+                m_showPopup = false;
+            }
+        }
   }
 }
 
@@ -78,10 +102,11 @@ void Window::onPaint() {
 void Window::onPaintUI() {
     abcg::OpenGLWindow::onPaintUI();
 
+    // Barra de pontuação no topo da tela
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::SetNextWindowSize(ImVec2(m_viewportSize.x, 50));
-    ImGuiWindowFlags const flags{ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar};
-    ImGui::Begin(" ", nullptr, flags);
+    ImGuiWindowFlags const flagsTop{ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar};
+    ImGui::Begin("Score", nullptr, flagsTop);
     ImVec4 corVermelha = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
     ImGui::PushStyleColor(ImGuiCol_Text, corVermelha);
     ImGui::SetCursorPos(ImVec2(10, 0));
@@ -89,10 +114,24 @@ void Window::onPaintUI() {
     ImGui::PopStyleColor();
     ImGui::End();
 
+    if (m_showPopup) {
+        ImGui::SetNextWindowPos(ImVec2(10, 60));
+        ImGui::SetNextWindowSizeConstraints(ImVec2(300, 150), ImVec2(600, 300));
+        ImGuiWindowFlags const flagsPopup{ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize};
+
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.3f, 0.9f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
+        ImGui::Begin("Popup", nullptr, flagsPopup);
+        ImGui::TextWrapped("%s", m_displayedText.c_str());
+        ImGui::End();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
+    }
+
     if (m_gameData.m_state == State::GameOver) {
         ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x / 2, m_viewportSize.y / 2), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
         ImGui::Begin("Game Over", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
         ImGui::SetWindowFontScale(2.0f);
         ImGui::Text("Game Over!");
         ImGui::Text("Pressione 'R' para reiniciar");
