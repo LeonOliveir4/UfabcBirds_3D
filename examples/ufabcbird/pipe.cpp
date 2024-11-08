@@ -15,6 +15,7 @@ void Pipes::create(GLuint program, GameData const &gamedata) {
     m_gap = glm::vec2{0., 0.5};
     m_borderWidth = 0.4;
     m_borderHeight = 0.1;
+    m_velocityX = gamedata.m_velocityX;
 
     Pipes::Pipe pipe_exemplo = createPipe();
     m_pipes.clear();
@@ -26,9 +27,9 @@ Pipes::Pipe Pipes::createPipe() {
     auto &re{m_randomEngine}; 
     std::uniform_real_distribution<float> randomHeight(-0.7, 0.7);
     pipe.m_height = (randomHeight(re));
-    pipe.m_color = m_color;
-    pipe.m_translation = glm::vec2{1., 0.}; // imprime fora da tela
-    pipe.m_velocity = glm::vec2{0., 0.};
+    pipe.m_color = glm::vec4(0.0, 0.68,0.07,1.0);
+    pipe.m_translation = glm::vec2{1.4, 0.}; // imprime fora da tela
+    pipe.m_velocity = glm::vec2{0., m_velocityX};
     pipe.m_p1 = glm::vec2{-0.2, pipe.m_height};
     pipe.m_p2 = pipe.m_p1 + m_gap;
 
@@ -94,6 +95,7 @@ void Pipes::paint( ) {
 } 
 
 void Pipes::update(GameData const &gamedata, float deltaTime){
+  m_velocityX = gamedata.m_velocityX;
   //atualiza a poosicao dos 
   m_birthTime += deltaTime;
   if (m_birthTime > m_birthRate) {
@@ -102,10 +104,10 @@ void Pipes::update(GameData const &gamedata, float deltaTime){
   }
 
   for(auto &pipe : m_pipes){
-    pipe.m_translation += glm::vec2(-0.2, 0.0) * deltaTime;
+    pipe.m_translation += glm::vec2(gamedata.m_velocityX, 0.0) * deltaTime;
   };
   //Remove os pipes dentro da tela
-  m_pipes.remove_if([](auto const &a) { return a.m_translation.x < -1.f; });
+  m_pipes.remove_if([](auto const &a) { return a.m_translation.x < -1.5f; });
   
 }
 

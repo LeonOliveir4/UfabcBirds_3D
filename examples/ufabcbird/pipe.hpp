@@ -21,7 +21,6 @@ public:
         glm::vec4 m_color{};
     };
 
-
     void create(GLuint program, GameData const &gamedata);
     void paint();
     void destroy();
@@ -31,6 +30,7 @@ public:
     float  m_borderHeight{}; // ALTURA DA borda do cano 
     glm::vec2 m_gap{}; // Distancia entre o cano de baixo e cima
     glm::vec4 m_color{};
+    float m_velocityX;
     
     float m_birthTime{};
     float m_birthRate{6.0f};

@@ -42,6 +42,5 @@ void Bg::destroy() {
 
 void Bg::update(GameData const &gamedata, float deltaTime){
     m_time += deltaTime;
-    std::cout << "m_time: " <<m_time << "\n"; 
 }
 
