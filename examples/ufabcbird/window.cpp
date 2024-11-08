@@ -7,6 +7,7 @@ void Window::onCreate() {
     m_gameData.m_totalTime = 0.0;
     m_gameData.m_velocityX = -0.2;
     std::cout << "Initialize shaders \n";
+    std::cout << "estado do jogo: " << static_cast<char>(m_gameData.m_state);
     m_birdProgram =
       abcg::createOpenGLProgram({{.source = assetsPath + "bird.vert",
                                   .stage = abcg::ShaderStage::Vertex},
@@ -31,6 +32,8 @@ void Window::onCreate() {
 }
 
 void Window::restart() {
+    m_gameData.m_state = State::Playing;
+    std::cout << "estado do jogo restart: " << static_cast<int>(m_gameData.m_state) << "\n";
     m_bird.create(m_birdProgram, m_gameData);
     m_bg.create(m_bgProgram, m_gameData);
     m_pipes.create(m_pipeProgram, m_gameData);
@@ -46,16 +49,35 @@ void Window::onEvent(SDL_Event const &event) {
     if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)
       m_gameData.m_input.reset(gsl::narrow<size_t>(Input::Up));
   }
+
+  // Adiciona a tecla R para reiniciar o jogo se estiver no estado GameOver
+    if (event.key.keysym.sym == SDLK_r && m_gameData.m_state == State::GameOver) {
+      restart();
+    }
 }
 
 void Window::onUpdate() {
-  auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
-  m_gameData.m_totalTime += deltaTime;
-  m_gameData.m_score = 30 * int(m_gameData.m_totalTime * 20);
-  checkCollisions();
-  m_bg.update(m_gameData, deltaTime);
-  m_bird.update(m_gameData, deltaTime);
-  m_pipes.update(m_gameData, deltaTime);
+  // Atualiza apenas se o jogo está em estado de Playing
+  if (m_gameData.m_state == State::Playing) {
+    auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
+    
+    // Atualiza o tempo total e a pontuação
+    m_gameData.m_totalTime += deltaTime;
+    m_gameData.m_score = 30 * int(m_gameData.m_totalTime * 20);
+
+    // Define o movimento de flap do pássaro quando a entrada "Up" é detectada
+    if (m_gameData.m_input.test(static_cast<size_t>(Input::Up))) {
+      m_bird.setFlap();
+    }
+
+    // Atualiza o fundo, o pássaro e os pipes
+    m_bg.update(m_gameData, deltaTime);
+    m_bird.update(m_gameData, deltaTime);
+    m_pipes.update(m_gameData, deltaTime);
+
+    // Verifica colisões
+    checkCollisions();
+  }
 }
 
 void Window::onPaint() {
@@ -63,7 +85,7 @@ void Window::onPaint() {
   abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
   m_bg.paint();
   m_pipes.paint();
-  m_bird.paint();
+  m_bird.paint(m_gameData);
   
 }
 
@@ -97,84 +119,95 @@ void Window::onPaintUI() {
         // ImGui::PushItemWidth(200);
         // ImGui::SliderFloat("Scale", &m_bird.m_scale, 0.0f, 5.0f);  
         ImGui::PopItemWidth(); 
+        if (m_gameData.m_state == State::GameOver) {
+          ImGui::Begin("Game Over", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground);
+          // Cria uma janela centralizada com tamanho automático para o texto
+          ImGui::SetNextWindowSize(ImVec2(0, 0));  // Deixa o tamanho da janela adaptável
+          ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x / 2, m_viewportSize.y / 2), 
+                                  ImGuiCond_Always, ImVec2(0.5f, 0.5f)); // Centraliza a janela na tela
+          // Define a cor vermelha e o tamanho maior para o texto
+          ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f)); // Cor vermelha
+          ImGui::SetWindowFontScale(2.0f); // Aumenta o tamanho do texto
+          ImGui::Text("Game Over!");
+          ImGui::Text("Pressione 'R' para reiniciar");
+          // Restaura o estilo padrão
+          ImGui::PopStyleColor();
+          ImGui::SetWindowFontScale(1.0f); // Volta ao tamanho normal
+          ImGui::End();
+        }
         ImGui::End();
     }
 }
 
 
-void Window::onResize(glm::ivec2 const &size) {
-  m_viewportSize = size;
+void Window::checkCollisions() {
+   glm::vec2 birdPosition = m_bird.m_translation;
 
-  abcg::glClear(GL_COLOR_BUFFER_BIT);
-}
+  // Definir limites de colisão para a tela (supõe-se que a tela está normalizada de -1.0 a 1.0)
+  float topLimit = 1.0f;
+  float bottomLimit = -1.0f;
 
-void Window::onDestroy() {
-  abcg::glDeleteProgram(m_birdProgram);
-  abcg::glDeleteProgram(m_bgProgram);
-  abcg::glDeleteProgram(m_pipeProgram);
-  m_bg.destroy(); 
-  m_pipes.destroy();
-  m_bird.destroy();
-}
+  // Verifica colisão com os limites superior e inferior da tela
+  if (birdPosition.y >= topLimit || birdPosition.y <= bottomLimit) {
+    m_gameData.m_state = State::GameOver;
+    std::cout << "Colisão com a borda da tela! Game Over.\n";
+    return; // Finaliza a verificação caso a colisão com a borda seja detectada
+  }
 
-void Window::checkCollisions(){
-  //colisao do passaro e dos pipes
-  for (auto  &pipe : m_pipes.m_pipes){
-    float testX = m_bird.m_translation.x;
-    float testY = m_bird.m_translation.y;
+  // Colisão do pássaro com os pipes
+  for (auto &pipe : m_pipes.m_pipes) {
+    float testX = birdPosition.x;
+    float testY = birdPosition.y;
+    float testX2 = birdPosition.x;
+    float testY2 = birdPosition.y;
 
-    float testX2 = m_bird.m_translation.x;
-    float testY2 = m_bird.m_translation.y;
-
-    float cX = m_bird.m_translation.x;
-    float cY = m_bird.m_translation.y;
-
-
-    float rX1 = (pipe.m_p1.x + pipe.m_translation.x);
-    float rY1 = (pipe.m_p1.y);
+    float rX1 = pipe.m_p1.x + pipe.m_translation.x;
+    float rY1 = pipe.m_p1.y;
     float rW = m_pipes.m_borderWidth;
     float rH = -1000.0;
 
     float rH2 = 1000.0;
-    float rX2 = (pipe.m_p2.x + pipe.m_translation.x);
-    float rY2 = (pipe.m_p2.y);
-    
+    float rX2 = pipe.m_p2.x + pipe.m_translation.x;
+    float rY2 = pipe.m_p2.y;
 
-    //Teste Pipe baixo
-    if(cX < rX1){
+    // Teste Pipe baixo
+    if (birdPosition.x < rX1) {
       testX = rX1;
-    } else if(cX > rX1 + rW){
+    } else if (birdPosition.x > rX1 + rW) {
       testX = rX1 + rW;
     }
-    if (cY > rY1){
-      testY = rY1; // acima
-    } else if(cY < rY1+rH){
-      testY = rY1 + rH; // abaixo
-    }
-    //Teste pipe alto
-    if(cX < rX2){
-      testX2 = rX2;
-    } else if(cX > rX2 + rW){
-      testX2 = rX2 + rW;
-    }
-    if (cY > rY2 + rH2){
-      testY2 = rY2 + rH2; // acima
-    } else if(cY < rY2){
-      testY2 = rY2; // abaixo
+    if (birdPosition.y > rY1) {
+      testY = rY1;
+    } else if (birdPosition.y < rY1 + rH) {
+      testY = rY1 + rH;
     }
 
-   //std::cout << "m_bird position: " << m_bird.m_translation.x << ", " << m_bird.m_translation.y << "\n";
-    float distX = cX-testX;
-    float distY = cY-testY;
-    float distance = std::sqrt( (distX*distX) + (distY*distY) );
-    float distX2 = cX-testX2;
-    float distY2 = cY-testY2;
-    float distance2 = std::sqrt( (distX2*distX2) + (distY2*distY2) );
-   // std::cout <<"pipe:"<<rX1<<" , "<< rY1  <<"    distance: " << distance <<"   Distance X:" <<distX<<"   Distance Y:" <<distY<<"\n";
-    glm::vec4 red = glm::vec4(1.0, 0.0,0.07,1.0);
-    if (distance <= 0.05 || distance2 <= 0.05){
-      //Detectou aqui neste IF
-      pipe.m_color = glm::vec4(1.0, 0.0,0.07,1.0);
+    // Teste Pipe alto
+    if (birdPosition.x < rX2) {
+      testX2 = rX2;
+    } else if (birdPosition.x > rX2 + rW) {
+      testX2 = rX2 + rW;
+    }
+    if (birdPosition.y > rY2 + rH2) {
+      testY2 = rY2 + rH2;
+    } else if (birdPosition.y < rY2) {
+      testY2 = rY2;
+    }
+
+    // Calcular distância para ambos os pipes
+    float distX = birdPosition.x - testX;
+    float distY = birdPosition.y - testY;
+    float distance = std::sqrt((distX * distX) + (distY * distY));
+
+    float distX2 = birdPosition.x - testX2;
+    float distY2 = birdPosition.y - testY2;
+    float distance2 = std::sqrt((distX2 * distX2) + (distY2 * distY2));
+
+    if (distance <= 0.05f || distance2 <= 0.05f) {
+      pipe.m_color = glm::vec4(1.0f, 0.0f, 0.07f, 1.0f); // Destacar o pipe colidido
+      m_gameData.m_state = State::GameOver;
+      std::cout << "Colisão com o pipe! Game Over.\n";
+      return; // Interrompe a função ao detectar colisão
     }
   }
 }

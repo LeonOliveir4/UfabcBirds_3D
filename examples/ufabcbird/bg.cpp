@@ -3,6 +3,7 @@
 
 void Bg::create(GLuint program, GameData const &gameData){
     destroy();
+    std::cout << "estado do jogo antes do bg: " << static_cast<char>(gameData.m_state) << "\n";
     m_program = program;
     m_time = 0.0f;
     m_timeLoc = abcg::glGetUniformLocation(m_program, "time");

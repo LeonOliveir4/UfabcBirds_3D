@@ -1,7 +1,8 @@
 #ifndef WINDOW_HPP_
-#define WIDNOW_HPP_
+#define WINDOW_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "gamedata.hpp"
 
 #include "bird.hpp"
 #include "pipe.hpp"
@@ -35,6 +36,7 @@ private:
     abcg::Timer m_restartTimer;
 
     void restart();
+    void checkCollisions();
 };
 
 

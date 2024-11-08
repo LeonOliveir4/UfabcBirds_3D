@@ -7,11 +7,12 @@
 class Bird {
 public:
     void create(GLuint program, GameData const &gamedata);
-    void paint();
+    void paint(GameData const &gamedata);
     void destroy();
     void update(GameData const &gamedata, float deltaTime);
     glm::vec2 normalizeCoord(glm::vec2 coord, GameData const &gamedata);
     void flap(float deltaTime);
+    void setFlap();
 
     bool m_flapWing{false};
     bool  m_isFlapping{false};
