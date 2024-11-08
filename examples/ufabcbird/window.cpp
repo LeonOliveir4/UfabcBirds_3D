@@ -116,7 +116,7 @@ void Window::onPaintUI() {
 
     if (m_showPopup) {
         ImGui::SetNextWindowPos(ImVec2(10, 60));
-        ImGui::SetNextWindowSizeConstraints(ImVec2(300, 150), ImVec2(600, 300));
+        ImGui::SetNextWindowSizeConstraints(ImVec2(200, 150), ImVec2(400, 300));
         ImGuiWindowFlags const flagsPopup{ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize};
 
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.3f, 0.9f));
