@@ -173,7 +173,7 @@ void Window::checkCollisions(){
    // std::cout <<"pipe:"<<rX1<<" , "<< rY1  <<"    distance: " << distance <<"   Distance X:" <<distX<<"   Distance Y:" <<distY<<"\n";
     glm::vec4 red = glm::vec4(1.0, 0.0,0.07,1.0);
     if (distance <= 0.05 || distance2 <= 0.05){
-
+      //Detectou aqui neste IF
       pipe.m_color = glm::vec4(1.0, 0.0,0.07,1.0);
     }
   }
