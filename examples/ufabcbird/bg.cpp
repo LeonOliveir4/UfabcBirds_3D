@@ -41,7 +41,7 @@ void Bg::destroy() {
   abcg::glDeleteVertexArrays(1, &m_VAO);
 }
 
-void Bg::update(GameData const &gamedata, float deltaTime){
+void Bg::update(float deltaTime){
     m_time += deltaTime;
 }
 
