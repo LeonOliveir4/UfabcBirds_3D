@@ -222,11 +222,10 @@ void Bird::update(GameData const &gamedata, float deltaTime){
 
   m_realPosition += m_velocity * deltaTime;
   m_translation = normalizeCoord(m_realPosition, gamedata);
-  std::cout << "real position: " << m_realPosition.x << "," << m_realPosition.y << "\n";
-  std::cout << "normalized position: " << m_translation.x << "," << m_translation.y << "\n";
-  std::cout << "Velocity: " << m_velocity.x << "," << m_velocity.y << "\n";
-  std::cout << "state do jogo: " << static_cast<int>(gamedata.m_state) << "\n";
-  std::cout << "Total time until bird fall to the ground:" << m_total_time << "\n"; 
+  // std::cout << "real position: " << m_realPosition.x << "," << m_realPosition.y << "\n";
+  // std::cout << "normalized position: " << m_translation.x << "," << m_translation.y << "\n";
+  // std::cout << "Velocity: " << m_velocity.x << "," << m_velocity.y << "\n";
+  // std::cout << "Total time until bird fall to the ground:" << m_total_time << "\n"; 
 }
 
 glm::vec2 Bird::normalizeCoord(glm::vec2 coord, GameData const &gamedata ) {

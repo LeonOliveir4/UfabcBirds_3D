@@ -17,9 +17,9 @@ public:
     bool m_flapWing{false};
     bool  m_isFlapping{false};
     float m_flapDuration{0.f};
-    float m_flapTimeA{0.0036};
+    float m_flapTimeA{0.251};
     float m_flapTimeB{0.500};
-    glm::vec2 m_flapPower{0.0f,11.0f};
+    glm::vec2 m_flapPower{0.0f,5.49f};
 
 
     double m_total_time{0.0};
@@ -29,7 +29,7 @@ public:
     glm::vec2 m_realPosition{}; // Posicao no mundo real
 
     glm::vec2 m_translation{};
-    glm::vec2 m_sustein{glm::vec2(0.0f,9.8f)}; //propriedade de planar;
+    glm::vec2 m_sustein{glm::vec2(0.0f,-4.697f)}; //propriedade de planar;
 
 private:
     GLuint m_program{};
