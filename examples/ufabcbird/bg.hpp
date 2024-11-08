@@ -9,7 +9,7 @@ public:
     void create(GLuint program, GameData const &gamedata);
     void paint();
     void destroy();
-    void update(GameData const &gamedata, float deltaTime);
+    void update(float deltaTime);
 
     float m_time;
     glm::vec2 m_resolution{800,800};

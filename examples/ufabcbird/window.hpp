@@ -2,9 +2,9 @@
 #define WINDOW_HPP_
 
 #include "abcgOpenGL.hpp"
-#include "gamedata.hpp"
 
 #include "bird.hpp"
+#include "pipe.hpp"
 #include "bg.hpp"
 #include "gamedata.hpp"
 
@@ -17,6 +17,7 @@ protected:
     void onPaintUI()override;
     void onResize(glm::ivec2 const &size)override;
     void onDestroy()override;
+    void checkCollisions();
 
 public:
     GameData m_gameData; 
@@ -25,14 +26,15 @@ private:
     glm::ivec2 m_viewportSize{};
     GLuint m_birdProgram{};
     GLuint m_bgProgram{};
+    GLuint m_pipeProgram{};
 
     Bird m_bird;
+    Pipes m_pipes;
     Bg m_bg;
     
     abcg::Timer m_restartTimer;
 
     void restart();
-    void checkCollisions();
 };
 
 
