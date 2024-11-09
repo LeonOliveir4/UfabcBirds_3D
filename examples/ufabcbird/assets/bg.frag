@@ -35,7 +35,7 @@ float noiseSmooth(vec2 pq)
 void main(){
     vec2 uv = gl_FragCoord.xy / vec2(800,800);
     //uv.x *= resolution.x / resolution.y;
-    uv.x += sin(time) * 5.;
+    uv.x += time / 10.;
     uv.y -= 0.7;
 
 
