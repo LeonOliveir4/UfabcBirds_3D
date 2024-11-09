@@ -67,3 +67,4 @@ build:
 ```bash
 ./build.sh (linux); build.bat (windows)
 ```
+[[URL do geogebra]](https://www.geogebra.org/m/grqgfqfh)
