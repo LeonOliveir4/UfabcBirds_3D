@@ -1,3 +1,3 @@
 project("ufabcbird3d")
-add_executable(${PROJECT_NAME} main.cpp window.cpp)
+add_executable(${PROJECT_NAME} main.cpp window.cpp model.cpp camera.cpp)
 enable_abcg(${PROJECT_NAME})
