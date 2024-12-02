@@ -2,7 +2,8 @@
 #define WINDOW_HPP_
 
 #include "abcgOpenGL.hpp"
-#include "model.hpp"
+#include "ground.hpp"
+#include "modelObj.hpp"
 #include "camera.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -17,7 +18,8 @@ protected:
 private:
     glm::ivec2 m_viewportSize{};
 
-    Model m_model;
+    ModelObj m_model;
+    Ground m_ground;
     Camera m_camera;
     GLuint m_program{};
     float m_dollySpeed{};

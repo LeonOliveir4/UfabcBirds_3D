@@ -9,7 +9,7 @@ struct Vertex {
   friend bool operator==(Vertex const &, Vertex const &) = default;
 };
 
-class Model {
+class ModelObj {
 public:
   void loadObj(std::string_view path, bool standardize = true);
   void render() const;
@@ -20,6 +20,9 @@ private:
   GLuint m_VAO{};
   GLuint m_VBO{};
   GLuint m_EBO{};
+
+  glm::vec4 m_color{0.f, 0.f, 0.5f, 1.0f};
+  GLuint m_program;
 
   std::vector<Vertex> m_vertices;
   std::vector<GLuint> m_indices;

@@ -51,6 +51,7 @@ void Window::onCreate(){
                                             .stage = abcg::ShaderStage::Fragment}});
     m_model.loadObj(assetsPath + "bird_test.obj");
     m_model.setupVAO(m_program);
+    m_ground.create(m_program);
 }
 
 void Window::onPaint() {
@@ -75,10 +76,11 @@ void Window::onPaint() {
     glm::mat4 modelMatrix{1.0f}; // matriz identidade
     modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
     abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &modelMatrix[0][0]);
-    abcg::glUniform4f(colorLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+    
+    
 
     m_model.render();
-
+    m_ground.render();
     abcg::glUseProgram(0);
 
 }
@@ -97,6 +99,9 @@ void Window::onResize(glm::ivec2 const &size) {
     m_camera.computeProjectionMatrix(size);
 }
 
+
+
 void Window::onDestroy() {
+    m_ground.destroy();
     m_model.destroy();
 }

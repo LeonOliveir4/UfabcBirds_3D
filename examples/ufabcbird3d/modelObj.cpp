@@ -1,4 +1,4 @@
-#include "model.hpp"
+#include "modelObj.hpp"
 
 #include <unordered_map>
 
@@ -10,7 +10,7 @@ template <> struct std::hash<Vertex> {
   }
 };
 
-void Model::createBuffers() {
+void ModelObj::createBuffers() {
   // Delete previous buffers
   abcg::glDeleteBuffers(1, &m_EBO);
   abcg::glDeleteBuffers(1, &m_VBO);
@@ -32,7 +32,7 @@ void Model::createBuffers() {
   abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Model::loadObj(std::string_view path, bool standardize) {
+void ModelObj::loadObj(std::string_view path, bool standardize) {
   tinyobj::ObjReader reader;
 
   if (!reader.ParseFromFile(path.data())) {
@@ -84,22 +84,25 @@ void Model::loadObj(std::string_view path, bool standardize) {
   }
 
   if (standardize) {
-    Model::standardize();
+    ModelObj::standardize();
   }
 
   createBuffers();
 }
 
-void Model::render() const {
+void ModelObj::render() const {
   abcg::glBindVertexArray(m_VAO);
-
+  auto const colorLoc{abcg::glGetUniformLocation(m_program, "color")};
+  abcg::glUniform4f(colorLoc, m_color.r,m_color.g, m_color.b, m_color.a);
   abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
 
   abcg::glBindVertexArray(0);
 }
 
-void Model::setupVAO(GLuint program) {
+void ModelObj::setupVAO(GLuint program) {
   // Release previous VAO
+  m_program = program;
+
   abcg::glDeleteVertexArrays(1, &m_VAO);
 
   // Create VAO
@@ -124,7 +127,7 @@ void Model::setupVAO(GLuint program) {
   abcg::glBindVertexArray(0);
 }
 
-void Model::standardize() {
+void ModelObj::standardize() {
   // Center to origin and normalize largest bound to [-1, 1]
 
   // Get bounds
@@ -139,11 +142,12 @@ void Model::standardize() {
   auto const center{(min + max) / 2.0f};
   auto const scaling{2.0f / glm::length(max - min)};
   for (auto &vertex : m_vertices) {
-    vertex.position = (vertex.position - center) * scaling;
+    //vertex.position = (vertex.position - center) * scaling;
+    vertex.position = (vertex.position) * scaling;
   }
 }
 
-void Model::destroy() const {
+void ModelObj::destroy() const {
   abcg::glDeleteBuffers(1, &m_EBO);
   abcg::glDeleteBuffers(1, &m_VBO);
   abcg::glDeleteVertexArrays(1, &m_VAO);
