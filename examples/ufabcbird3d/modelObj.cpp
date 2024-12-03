@@ -102,6 +102,7 @@ void ModelObj::render() const {
 void ModelObj::setupVAO(GLuint program) {
   // Release previous VAO
   m_program = program;
+  m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.5f));
 
   abcg::glDeleteVertexArrays(1, &m_VAO);
 
@@ -142,7 +143,7 @@ void ModelObj::standardize() {
   auto const center{(min + max) / 2.0f};
   auto const scaling{2.0f / glm::length(max - min)};
   for (auto &vertex : m_vertices) {
-    //vertex.position = (vertex.position - center) * scaling;
+    vertex.position = (vertex.position - center) * scaling;
     vertex.position = (vertex.position) * scaling;
   }
 }

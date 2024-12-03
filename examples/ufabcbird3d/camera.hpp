@@ -15,7 +15,9 @@ public:
 
     glm::mat4 const &getViewMatrix() const {return m_viewMatrix;}
     glm::mat4 const &getProjMatrix() const {return m_projMatrix;}
+    float m_fov{70.0f};
 
+    
 private:
     glm::vec3 m_eye{0.0f, 0.5f, 2.5f}; // Camera position
     glm::vec3 m_at{0.0f, 0.5f, 0.0f};  // Look-at point

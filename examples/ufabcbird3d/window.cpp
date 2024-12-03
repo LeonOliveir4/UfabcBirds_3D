@@ -1,5 +1,5 @@
 #include "window.hpp"
-
+#include <iostream>
 
 //Mapeamento de controle da camera
 void Window::onEvent(SDL_Event const &event) {
@@ -42,7 +42,7 @@ void Window::onEvent(SDL_Event const &event) {
 void Window::onCreate(){
     auto const assetsPath{abcg::Application::getAssetsPath()};
 
-    abcg::glClearColor(0., 0., 0., 1.);
+    abcg::glClearColor(0.537f, 0.817f, 0.920f, 1.);
     abcg::glEnable(GL_DEPTH_TEST);
 
     m_program = abcg::createOpenGLProgram({{.source = assetsPath + "model.vert",
@@ -72,10 +72,7 @@ void Window::onPaint() {
     abcg::glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE,
                            &m_camera.getProjMatrix()[0][0]);
 
-    //Matriz de modelo temporario, provevelmente vai ficar na classe do passaro
-    glm::mat4 modelMatrix{1.0f}; // matriz identidade
-    modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
-    abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &modelMatrix[0][0]);
+    abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &m_model.getModelMatrix()[0][0]);
     
     
 
@@ -84,6 +81,31 @@ void Window::onPaint() {
     abcg::glUseProgram(0);
 
 }
+
+void Window::onPaintUI() {
+    abcg::OpenGLWindow::onPaintUI();
+    {
+        auto const widgetSize{ImVec2(218, 62)};
+        ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x - widgetSize.x - 5, 5));
+        ImGui::SetNextWindowSize(widgetSize);
+        ImGui::Begin("Widget window", nullptr, ImGuiWindowFlags_NoDecoration);
+        {
+             ImGui::PushItemWidth(120);
+             ImGui::PushItemWidth(120);
+             static std::size_t currentIndex{};
+             auto fov  = m_camera.m_fov;
+             ImGui::SliderFloat("FOV", &m_camera.m_fov, 10.f, 180.f); 
+             if (fov != m_camera.m_fov) {
+                m_camera.computeProjectionMatrix(m_viewportSize);
+             }
+        }
+        ImGui::End();
+    }
+}
+
+
+
+
 
 void Window::onUpdate() {
   auto const deltaTime{gsl::narrow_cast<float>(getDeltaTime())};
