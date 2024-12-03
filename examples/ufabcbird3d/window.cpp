@@ -50,33 +50,31 @@ void Window::onCreate(){
                                             {.source = assetsPath + "model.frag",
                                             .stage = abcg::ShaderStage::Fragment}});
     m_model.loadObj(assetsPath + "bird_test.obj");
+    m_model_test.create(m_program);
     m_model.setupVAO(m_program);
     m_ground.create(m_program);
 }
 
 void Window::onPaint() {
     abcg::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
 
-    abcg::glUseProgram(m_program);
+    // abcg::glUseProgram(m_program);
 
-    auto const viewMatrixLoc{abcg::glGetUniformLocation(m_program, "viewMatrix")};
-    auto const projMatrixLoc{abcg::glGetUniformLocation(m_program, "projMatrix")};
-    auto const modelMatrixLoc{
-        abcg::glGetUniformLocation(m_program, "modelMatrix")};
-    auto const colorLoc{abcg::glGetUniformLocation(m_program, "color")};
+    // auto const viewMatrixLoc{abcg::glGetUniformLocation(m_program, "viewMatrix")};
+    // auto const projMatrixLoc{abcg::glGetUniformLocation(m_program, "projMatrix")};
+    // // auto const modelMatrixLoc{abcg::glGetUniformLocation(m_program, "modelMatrix")};
+    // // auto const colorLoc{abcg::glGetUniformLocation(m_program, "color")};
 
-    abcg::glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE,
-                             &m_camera.getViewMatrix()[0][0]);
-    abcg::glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE,
-                           &m_camera.getProjMatrix()[0][0]);
-
-    abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &m_model.getModelMatrix()[0][0]);
-    
-    
-
-    m_model.render();
+    // abcg::glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &m_camera.getViewMatrix()[0][0]);
+    // abcg::glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &m_camera.getProjMatrix()[0][0]);
+    //abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &m_model.getModelMatrix()[0][0]);
+    // std::cout<< "Endereço da viewMatrix antes do obj:" << &m_camera.getViewMatrix()[0][0] << '\n';
+    // std::cout<< "Endereço da projMatrix antes do obj:" << &m_camera.getProjMatrix()[0][0] << '\n';
+    m_model_test.render(&m_camera.getViewMatrix()[0][0], &m_camera.getProjMatrix()[0][0]);
+    //abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &m_model_test.getModelMatrix()[0][0]);
+    //m_model_test.render();
+  
     m_ground.render();
     abcg::glUseProgram(0);
 
@@ -124,6 +122,7 @@ void Window::onResize(glm::ivec2 const &size) {
 
 
 void Window::onDestroy() {
+    m_model_test.destroy();
     m_ground.destroy();
     m_model.destroy();
 }

@@ -5,8 +5,9 @@
 #include "abcgOpenGL.hpp"
 
 class Model{
-    virtual void create(GLuint program) ;
-    virtual void render() ;
+public:
+    virtual void create(GLuint program);
+    virtual void render(const float *viewMatrix, const float *projMatrix);
     virtual void destroy() ;
     // Getters
     const glm::vec3& getPosition() const { return m_position; }

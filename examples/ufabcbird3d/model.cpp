@@ -1,7 +1,10 @@
 #include "model.hpp"
+#include <iostream>
 
 
 void Model::create(GLuint program) {
+
+    m_program = program;
     std::array vertices{//x y z
         glm::vec3{-0.5f, -0.5f, -0.5f},
         glm::vec3{-0.5f, 0.5f, -0.5f},
@@ -53,13 +56,24 @@ void Model::create(GLuint program) {
     abcg::glBindVertexArray(0);
 }
 
-void Model::render(){
+void Model::render(const float *viewMatrix, const float *projMatrix){//const float *viewMatrix, const float *projMatrix){
     abcg::glUseProgram(m_program);
-    abcg::glBindVertexArray(m_VAO);
+    // std::cout<< "Endereço da viewMatrix dentro do obj:" << viewMatrix << '\n';
+    // std::cout<< "Endereço da projMatrix dentro do obj:" << projMatrix << '\n';
+    auto const viewMatrixLoc{abcg::glGetUniformLocation(m_program, "viewMatrix")};
+    auto const projMatrixLoc{abcg::glGetUniformLocation(m_program, "projMatrix")};
+    auto const modelMatrixLoc{abcg::glGetUniformLocation(m_program, "modelMatrix")};
     auto const colorLoc{abcg::glGetUniformLocation(m_program, "color")};
+
+    abcg::glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, viewMatrix);
+    abcg::glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, projMatrix);
+    abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &m_modelMatrix[0][0]);
     abcg::glUniform4f(colorLoc, m_color.r,m_color.g, m_color.b, m_color.a);
+
+    abcg::glBindVertexArray(m_VAO);
     abcg::glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, nullptr);
     abcg::glBindVertexArray(0);
+    // abcg::glUseProgram(0);
 }
 
 void Model::destroy(){
