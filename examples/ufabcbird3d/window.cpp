@@ -76,7 +76,7 @@ void Window::onPaint() {
     //m_model_test.render();
   
     m_ground.render();
-    abcg::glUseProgram(0);
+    abcg::glUseProgram(0); 
 
 }
 
