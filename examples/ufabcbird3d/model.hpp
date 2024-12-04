@@ -3,16 +3,16 @@
 
 
 #include "abcgOpenGL.hpp"
+#include "camera.hpp"
 
 class Model{
 public:
     virtual void create(GLuint program);
-    virtual void render(const float *viewMatrix, const float *projMatrix);
+    virtual void render(const Camera camera);
     virtual void destroy() ;
     // Getters
     const glm::vec3& getPosition() const { return m_position; }
     float getScale() const { return m_scale; }
-    const glm::vec3& getAxis() const { return m_axis; }
     const glm::mat4& getMatrixRotation() const { return m_matrixRotation; }
 
     // Getter para a matriz do modelo
@@ -26,11 +26,6 @@ public:
 
     void setScale(float scale) {
         m_scale = scale;
-        updateModelMatrix();
-    }
-
-    void setAxis(const glm::vec3& axis) {
-        m_axis = axis;
         updateModelMatrix();
     }
 
@@ -49,10 +44,9 @@ protected:
     glm::vec4 m_color{0.f, 0.f, 0.5f, 1.0f};
 //Identity Matrix
     glm::mat4 m_modelMatrix{1.0f};
-// Position, scale and rotaion atributes
+//Position, scale and rotaion atributes
     glm::vec3 m_position{0.f, 0.f, 0.f};
     float m_scale{1.f};
-    glm::vec3 m_axis{0.f, 1.f, 0.f};
     glm::mat4 m_matrixRotation{1.0f};
 //Index indices and vertex
     std::vector<glm::vec3> m_vertices;

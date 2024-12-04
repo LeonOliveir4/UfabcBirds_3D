@@ -1,3 +1,4 @@
+//Classe padrao para qualquer opbjeto 3d que pode ser renderizado
 #include "model.hpp"
 #include <iostream>
 
@@ -5,7 +6,7 @@
 void Model::create(GLuint program) {
 
     m_program = program;
-    std::array vertices{//x y z
+    m_vertices = {//x y z
         glm::vec3{-0.5f, -0.5f, -0.5f},
         glm::vec3{-0.5f, 0.5f, -0.5f},
         glm::vec3{-0.5f, 0.5f, 0.5f},
@@ -16,30 +17,34 @@ void Model::create(GLuint program) {
         glm::vec3{0.5f, -0.5f, 0.5f}
     };
 
-    std::array indices{
-        1, 2, 3,//
-        1, 3, 4,
-        1, 2, 5,//
-        2, 5, 6,
-        1, 4, 5,//
-        4, 5, 6,
-        3, 4, 8,//
+    m_indices = {
+        0, 1, 2,//
+        0, 2, 3,
+        0, 1, 4,//
+        1, 4, 5,
+        0, 3, 4,//
         3, 4, 7,
-        5, 6, 7,//
-        6, 7, 8
+        2, 3, 7,//
+        2, 6, 7,
+        4, 5, 6,//
+        4, 6, 7,
+        1, 2, 5,//
+        2, 5, 6
     };
+
+    
     abcg::glGenBuffers(1, &m_VBO);
     abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     abcg::glBufferData(GL_ARRAY_BUFFER,
-                        sizeof(vertices.at(0)) * vertices.size(),
-                        vertices.data(), GL_STATIC_DRAW);
+                        sizeof(m_vertices.at(0)) * m_vertices.size(),
+                        m_vertices.data(), GL_STATIC_DRAW);
     abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     abcg::glGenBuffers(1, &m_EBO);
     abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                        sizeof(indices.at(0)) * indices.size(),
-                        indices.data(), GL_STATIC_DRAW);
+                        sizeof(m_indices.at(0)) * m_indices.size(),
+                        m_indices.data(), GL_STATIC_DRAW);
     abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     abcg::glGenVertexArrays(1, &m_VAO);
@@ -56,24 +61,23 @@ void Model::create(GLuint program) {
     abcg::glBindVertexArray(0);
 }
 
-void Model::render(const float *viewMatrix, const float *projMatrix){//const float *viewMatrix, const float *projMatrix){
+void Model::render(const Camera camera){//const float *viewMatrix, const float *projMatrix){
     abcg::glUseProgram(m_program);
-    // std::cout<< "Endereço da viewMatrix dentro do obj:" << viewMatrix << '\n';
-    // std::cout<< "Endereço da projMatrix dentro do obj:" << projMatrix << '\n';
+
     auto const viewMatrixLoc{abcg::glGetUniformLocation(m_program, "viewMatrix")};
     auto const projMatrixLoc{abcg::glGetUniformLocation(m_program, "projMatrix")};
     auto const modelMatrixLoc{abcg::glGetUniformLocation(m_program, "modelMatrix")};
     auto const colorLoc{abcg::glGetUniformLocation(m_program, "color")};
 
-    abcg::glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, viewMatrix);
-    abcg::glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, projMatrix);
+    abcg::glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, &camera.getViewMatrix()[0][0]);
+    abcg::glUniformMatrix4fv(projMatrixLoc, 1, GL_FALSE, &camera.getProjMatrix()[0][0]);
     abcg::glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, &m_modelMatrix[0][0]);
     abcg::glUniform4f(colorLoc, m_color.r,m_color.g, m_color.b, m_color.a);
 
     abcg::glBindVertexArray(m_VAO);
-    abcg::glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, nullptr);
+    abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     abcg::glBindVertexArray(0);
-    // abcg::glUseProgram(0);
+    abcg::glUseProgram(0);
 }
 
 void Model::destroy(){

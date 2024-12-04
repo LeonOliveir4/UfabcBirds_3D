@@ -5,7 +5,6 @@
 #include "ground.hpp"
 #include "modelObj.hpp"
 #include "model.hpp"
-#include "model_2.hpp"
 #include "camera.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -28,6 +27,8 @@ private:
     float m_dollySpeed{};
     float m_truckSpeed{};
     float m_panSpeed{};
+    float m_tiltSpeed{};
+    float m_elevationSpeed{};
 };
 
 #endif

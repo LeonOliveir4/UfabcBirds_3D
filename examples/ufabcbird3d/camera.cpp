@@ -5,7 +5,7 @@
 void Camera::computeProjectionMatrix(glm::vec2 const &size) {
     m_projMatrix = glm::mat4(1.0f);
     auto const aspect(size.x / size.y);
-    m_projMatrix = glm::perspective(glm::radians(m_fov), aspect, 0.1f, 5.0f);
+    m_projMatrix = glm::perspective(glm::radians(m_fov), aspect, 0.1f, 100.0f);
 }
 
 void Camera::computeViewMatrix(){
@@ -32,6 +32,14 @@ void Camera::truck(float speed){
     computeViewMatrix();
 }
 
+void Camera::elevation(float speed){
+    //Sobe e desce
+    m_at = m_at + (m_up * speed);
+    m_eye = m_eye + (m_up * speed);
+
+    computeViewMatrix();
+}
+
 void Camera::pan(float speed) {
     glm::mat4 transform{1.0f};
 
@@ -44,3 +52,16 @@ void Camera::pan(float speed) {
     computeViewMatrix();    
 }
 
+void Camera::tilt(float speed){
+    glm::mat4 transform{1.0f};
+    auto const forward{glm::normalize(m_at - m_eye)};
+    auto const left{glm::normalize(glm::cross(m_up, forward))};
+
+    transform = glm::translate(transform, m_eye);
+    transform = glm::rotate(transform, -speed, left);
+    transform = glm::translate(transform, -m_eye);
+
+    m_at = transform * glm::vec4(m_at, 1.0f);
+
+    computeViewMatrix();
+}
