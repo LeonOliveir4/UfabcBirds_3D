@@ -48,13 +48,12 @@ protected:
     glm::vec3 m_position{0.f, 0.f, 0.f};
     float m_scale{1.f};
     glm::mat4 m_matrixRotation{1.0f};
+    glm::vec3 m_pivot{0.f, 0.5f, 0.f};
 //Index indices and vertex
     std::vector<glm::vec3> m_vertices;
     std::vector<GLuint> m_indices;
     void updateModelMatrix() {
-        m_modelMatrix = glm::translate(glm::mat4(1.0f), m_position) *
-                                m_matrixRotation *
-                                glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));
+        m_modelMatrix = glm::translate(glm::mat4(1.0f), m_position)*glm::translate(glm::mat4(1.0f), -m_pivot)* m_matrixRotation *  glm::translate(glm::mat4(1.0f), m_pivot) * glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));
     }
 };
 #endif
