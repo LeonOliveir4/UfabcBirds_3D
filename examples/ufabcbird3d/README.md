@@ -1,6 +1,6 @@
 <div>
 <h1>UfabcBirds 3D - Relatório do Projeto</h1>
-<img src="" alt="Imagem do projeto">
+<img src="cdace589-9c7e-4f97-81d4-d0c13c92c76e.jpg" alt="Imagem do projeto">
 </div>
 
 ## Disciplina
@@ -43,14 +43,16 @@ Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fau
   - Movimentação da câmera no ambiente tridimensional.
 - **Animação**: Alteração contínua das propriedades dos objetos para criar movimento.
 - **Jogabilidade**:
-  - Coleta de frutas pelo chão, contabilizando a pontuação do jogador.
-  - Escolha entre duas espécies de pássaros brasileiros, cada uma com animações e características específicas.
+  - Controle de pássaros com teclas de movimentação e rotação (`W`, `A`, `S`, `D`, `Q`, `E`).
+  - Gerenciamento de colisões, incluindo limites do cenário e colisões com o solo.
+  - Exibição de estado `gameOver` e reinício com tecla `ESPAÇO`.
+  - Textos explicativos com informações sobre as aves.
 - **Estados do jogo**:
-  - **`playing`**: Estado principal, onde o jogador interage com o ambiente 3D para coletar frutas.
-  - **`gameOver`**: Estado de término, ativado ao alcançar uma condição específica no jogo (ex.: limite de tempo ou colisão).
+  - **`playing`**: Estado principal, onde o jogador interage com o ambiente 3D.
+  - **`gameOver`**: Estado de término, ativado ao alcançar uma condição específica no jogo (ex.: limite do terreno ou colisão com o solo).
 - **Educação**:
-  - Representação do **tucano** como exemplo de ave brasileira.
-  - Planejamento para adicionar frutas nativas, como o açaí e a jabuticaba, para enriquecer o cenário e promover o aprendizado.
+  - Informações sobre as aves aparecem como um popup no jogo, promovendo conhecimento.
+  - Representação inicial do **tucano**, com planos para expandir para outras espécies, como o papagaio.
 
 ---
 
@@ -58,17 +60,16 @@ Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fau
 ### Arquivos principais:
 - **Código-Fonte**:
   - `animation.cpp` e `animation.hpp`: Controlam animações específicas de elementos no jogo.
-  - `cena.cpp` e `cena.hpp`: Gerenciamento e renderização do cenário.
-  - `fruta.cpp` e `fruta.hpp`: Implementação das frutas que os pássaros coletam.
+  - `bird.cpp` e `bird.hpp`: Implementação dos pássaros jogáveis, incluindo reset, movimentação e lógica de colisão.
+  - `camera.cpp` e `camera.hpp`: Classe responsável pela projeção e movimentação da câmera.
   - `gamedata.cpp` e `gamedata.hpp`: Gerenciamento de estados e dados do jogo.
-  - `camera.hpp` e `camera.cpp`: Classe responsável pela projeção e movimentação da câmera.
-  - `model.hpp` e `model.cpp`: Base para a criação de modelos com suporte a translação, rotação e escala.
-  - `modelObj.hpp` e `modelObj.cpp`: Carregamento e manipulação de modelos OBJ.
-<<<<<<< HEAD
-  - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
+  - `window.cpp` e `window.hpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
+  - `modelObj.cpp` e `modelObj.hpp`: Carregamento e manipulação de modelos OBJ.
+  - `ground.cpp` e `ground.hpp`: Gerenciamento do cenário do chão.
+  - `main.cpp`: Entrada principal do programa.
 
 - **Assets**:
-  - **Modelos para cada passaro**:
+  - **Modelos para cada pássaro**:
     - `asa_direita.obj`, `asa_direita.mtl`: Modelo e material da asa direita.
     - `asa_esquerda.obj`, `asa_esquerda.mtl`: Modelo e material da asa esquerda.
     - `bico.obj`: Modelo do bico.
@@ -77,16 +78,20 @@ Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fau
   - **Shaders**:
     - `model.vert`: Vertex shader para renderização de objetos.
     - `model.frag`: Fragment shader para renderização de objetos.
-=======
-- **Cenário**:
-  - `ground.hpp` e `ground.cpp`: Renderização de um solo base no plano XZ.
-- **Interface gráfica**:
-  - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
-- Diretório `assets/`:
-  - `tucano/`: Modelo de pássaro utilizado no projeto.
-  - `arara/`: Modelo de pássaro utilizado no projeto.
-  - `model.vert` e `model.frag`: Shaders para renderização de objetos.
->>>>>>> e84fbf9 (camera)
+
+---
+
+## Adições Recentes
+- Implementação de popups educativos:
+  - Exibição de mensagens informativas no início do jogo, relacionadas ao pássaro selecionado.
+  - Textos são exibidos gradualmente, com a opção de alterar a velocidade de exibição.
+- Correções de colisões:
+  - A lógica foi aprimorada para detectar corretamente colisões laterais e frontais dos pássaros com o chão.
+- Movimentação e câmera:
+  - A câmera foi ajustada para seguir suavemente o pássaro.
+  - Limites do terreno foram corrigidos para refletir o tamanho real do cenário.
+- Novo sistema de reset:
+  - Reseta o estado e posicionamento dos pássaros corretamente após o estado `gameOver`.
 
 ---
 
