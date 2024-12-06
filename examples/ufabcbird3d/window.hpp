@@ -2,11 +2,14 @@
 #define WINDOW_HPP_
 
 #include "abcgOpenGL.hpp"
+#include <random>
+
 #include "gamedata.hpp"
 #include "ground.hpp"
 #include "modelObj.hpp"
 #include "model.hpp"
 #include "bird.hpp"
+#include "fruta.hpp"
 #include "camera.hpp"
 #include "birdDescriptions.hpp"
 
@@ -26,26 +29,33 @@ private:
     glm::ivec2 m_viewportSize{};
     Bird m_bird;
     Ground m_ground;
+    Fruta fruta1;
+    Fruta fruta2;
+    Fruta fruta3;
+    Fruta fruta4;
+    Fruta fruta5;
+    Fruta fruta6;
+    Fruta fruta7;
+    Fruta fruta8;
+    Fruta fruta9;
+    Fruta fruta10;
+    Fruta fruta11;
+    Fruta fruta12;
+
     Camera m_camera;
     GLuint m_program{};
-    void showBirdInfo(const std::string& birdName);
 
-    bool m_showPopup{true};
-    float m_popupTimeElapsed{0.0f};
-    std::string m_popupText;
-    std::string m_displayedText;
-    size_t m_currentCharIndex{0};
-    float m_textDisplaySpeed{0.05f};
 
-    //float m_dollySpeed{};
-    //float m_truckSpeed{};
-    //float m_panSpeed{};
-    //float m_tiltSpeed{};
-    //float m_elevationSpeed{};
+    float m_dollySpeed{};
+    float m_truckSpeed{};
+    float m_panSpeed{};
+    float m_tiltSpeed{};
+    float m_elevationSpeed{};
 
-    //bool m_go{false};
+    bool m_go{false};
 
-    void restartGame();
+    std::default_random_engine m_randomEngine;
+    std::uniform_real_distribution<float> m_randomDist{-3.0f, 3.0f};
 };
 
 #endif

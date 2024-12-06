@@ -69,6 +69,18 @@ void Window::onPaint() {
 
 
     m_bird.render(m_camera);
+    fruta1.render(m_camera);
+    fruta2.render(m_camera);
+    fruta3.render(m_camera);
+    fruta4.render(m_camera);
+    fruta5.render(m_camera);
+    fruta6.render(m_camera);
+    fruta7.render(m_camera);
+    fruta8.render(m_camera);
+    fruta9.render(m_camera);
+    fruta10.render(m_camera);
+    fruta11.render(m_camera);
+    fruta12.render(m_camera);
     m_ground.render(m_camera);
     abcg::glUseProgram(0); 
 }
@@ -188,6 +200,21 @@ void Window::onUpdate() {
             m_showPopup = false;
         }
     }
+  fruta1.update(deltaTime, m_gameData);
+  fruta2.update(deltaTime, m_gameData);
+  fruta3.update(deltaTime, m_gameData);
+  fruta4.update(deltaTime, m_gameData);
+  fruta5.update(deltaTime, m_gameData);
+  fruta6.update(deltaTime, m_gameData);
+  fruta7.update(deltaTime, m_gameData);
+  fruta8.update(deltaTime, m_gameData);
+  fruta9.update(deltaTime, m_gameData);
+  fruta10.update(deltaTime, m_gameData);
+  fruta11.update(deltaTime, m_gameData);
+  fruta12.update(deltaTime, m_gameData);
+
+  m_bird.update(deltaTime, m_gameData);
+  m_camera.update(m_bird.getPosition(),m_bird.getFoward(), m_bird.getUpVector());
 }
 
 void Window::onResize(glm::ivec2 const &size) {
@@ -196,6 +223,12 @@ void Window::onResize(glm::ivec2 const &size) {
 }
 
 void Window::onDestroy() {
+  fruta1.destroy();
+  fruta2.destroy();
+  fruta3.destroy();
+  fruta4.destroy();
+  fruta5.destroy();
+  fruta6.destroy();
    m_ground.destroy();
    m_bird.destroy();
 }
