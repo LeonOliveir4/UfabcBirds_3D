@@ -34,6 +34,8 @@ private:
     float m_elevationSpeed{};
 
     bool m_go{false};
+
+    void restartGame();
 };
 
 #endif

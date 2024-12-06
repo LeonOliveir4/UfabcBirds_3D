@@ -1,7 +1,7 @@
 #include "bird.hpp"
 #include <iostream>
 
-void Bird::create(GLuint program, std::string bird_path, GameData const &gamedata){
+void Bird::create(GLuint program, std::string bird_path){
     m_program = program;
     m_bird_path = bird_path;
     m_bico.create(m_program, m_bird_path + "bico.obj");
@@ -58,7 +58,9 @@ void Bird::yaw(float speed){ // rotacao em y
     updateMasterMatrix();
 }
 
-void Bird::update(float deltaTime, GameData const &gamedata) {
+void Bird::update(float deltaTime, GameData &gamedata) {
+    if (gamedata.m_state != State::Playing) return;
+    
     if (gamedata.m_input[gsl::narrow<size_t>(Input::PitchPos)]) {
         std::cout << "PitchPos" <<"\n";
         pitch(m_pitchVelocity);
@@ -83,8 +85,33 @@ void Bird::update(float deltaTime, GameData const &gamedata) {
         std::cout << "RollNeg" <<"\n";
         roll(-m_rollVelocity);
     }
+    // Simula gravidade para o pássaro (se necessário)
+    //float gravity = -9.8f * deltaTime;  // Gravidade constante
+    //m_position.y += gravity;
+
     m_velocity = getFoward() * 2.0f;
     m_position += m_velocity * deltaTime;
+
+    float groundLevel = -0.8f;
+    float birdRadius = 0.5f;
+
+    if ((m_position.y - birdRadius) <= groundLevel) {
+        std::cout << "Colisão com o chão detectada!\n";
+        gamedata.m_state = State::GameOver;
+    }
+
+    float leftLimit = -25.0f;
+    float rightLimit = 25.0f;
+    float backLimit = -25.0f;
+    float frontLimit = 25.0f;
+
+    if (m_position.x < leftLimit || m_position.x > rightLimit || 
+        m_position.z < backLimit || m_position.z > frontLimit) {
+        std::cout << "Fora dos limites do chão!\n";
+        gamedata.m_state = State::GameOver;
+        return;
+    }
+
     updateAnimation(deltaTime);
 }
 void Bird::destroy(){
@@ -93,6 +120,13 @@ void Bird::destroy(){
     m_asa_esquerda.destroy();
     m_asa_direita.destroy();
     m_rabo.destroy();
+}
+
+void Bird::reset() {
+    m_position = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_velocity = glm::vec3(0.0f);
+    m_matrixRotation = glm::mat4(1.0f);
+    updateMasterMatrix();
 }
 
 void Bird::updateAnimation(float deltaTime){

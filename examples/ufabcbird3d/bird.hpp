@@ -9,13 +9,15 @@
 
 class Bird {
 public:
-    virtual void create(GLuint program, std::string bird_path, GameData const &gamedata);
+    virtual void create(GLuint program, std::string bird_path);
     virtual void render(Camera camera);
-    void update(float deltaTime, GameData const &gamedata);
+    void update(float deltaTime, GameData &gamedata);
     void pitch(float speed); //rotacao em x
     void roll(float speed); // rotacao em z
     void yaw(float speed); // rotacao em y
     virtual void destroy();
+
+    void reset();
 
         // Getters
     const glm::vec3& getPosition() const { return m_position; }

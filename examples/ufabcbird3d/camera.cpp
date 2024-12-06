@@ -76,3 +76,10 @@ void Camera::tilt(float speed){
 
     computeViewMatrix();
 }
+
+void Camera::reset() {
+    m_eye = glm::vec3(0.0f, 0.0f, 3.0f);
+    m_at = glm::vec3(0.0f);
+    m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+    computeViewMatrix();
+}
