@@ -5,6 +5,7 @@
 
 void Fruta::create(GLuint program, std::string fruit_1, std::string fruit_2, std::string fruit_3,glm::vec4 color1,glm::vec4 color2, glm::vec4 color3){
     m_program = program;
+    m_isLive = true;
     m_fruta_1.create(m_program, fruit_1);
     m_fruta_1.setColor(color1);
     m_fruta_2.create(m_program, fruit_2);

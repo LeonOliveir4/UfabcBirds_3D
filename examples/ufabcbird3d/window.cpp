@@ -60,6 +60,12 @@ void Window::onCreate(){
     m_bird.create(m_program, assetsPath + "tucano/");
     m_ground.create(m_program);
     //frutas
+    createFrutas();
+    showBirdInfo("Tucano");
+}
+
+void Window::createFrutas() {
+    auto const assetsPath{abcg::Application::getAssetsPath()};
     auto &re{m_randomEngine}; 
     std::uniform_real_distribution<float> randomHeight(0.1f, 15.0f);
     std::uniform_real_distribution<float> randomPlane(-40.0f, 40.0f);
@@ -87,8 +93,7 @@ void Window::onCreate(){
     fruta11.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
     fruta12.create(m_program, assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj", glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f));
     fruta12.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
-    showBirdInfo("Tucano");
-}
+};
 
 void Window::onPaint() {
     abcg::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -152,6 +157,7 @@ void Window::onPaintUI() {
 
         ImGui::Begin("Game Over Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
         ImGui::Text("Game Over!");
+        ImGui::Text("Sua pontuação foi %d pontos.", m_gameData.m_pontos);
         ImGui::Text("Aperte ESPAÇO para reiniciar.");
         ImGui::End();
     }
@@ -163,12 +169,13 @@ void Window::onPaintUI() {
 
             static float cameraUp = m_camera.getUpDistance();
             static float cameraBack = m_camera.getBackwardDistance();
-            ImGui::SliderFloat("X_position", &position.x, -10.0f, 10.f);
-            ImGui::SliderFloat("Y_position", &position.y, -10.0f, 10.f);
-            ImGui::SliderFloat("Z_position", &position.z, -10.0f, 10.f);
+            ImGui::SliderFloat("X_position", &position.x, -25.0f, 25.f);
+            ImGui::SliderFloat("Y_position", &position.y, -25.0f, 25.f);
+            ImGui::SliderFloat("Z_position", &position.z, -25.0f, 25.f);
 
             ImGui::SliderFloat("Camera_up", &cameraUp, -10.0f, 10.f);
             ImGui::SliderFloat("Camera_back", &cameraBack, -10.0f, 10.f);
+            ImGui::Text("Pontuacao: %d", m_gameData.m_pontos);
 
             m_camera.setUp(cameraUp);
             m_camera.setBackward(cameraBack);
@@ -193,8 +200,10 @@ void Window::showBirdInfo(const std::string& birdName) {
 
 
 void Window::restartGame() {
+    createFrutas();
     m_gameData.m_state = State::Playing;
     m_gameData.m_input.reset();
+    m_gameData.m_pontos = 0;
     m_bird.reset();
     m_camera.reset();
 }
@@ -264,74 +273,74 @@ void Window::onDestroy() {
 void Window::checkCollisions(){
     if(fruta1.getIsLive()){
         std::cout<<"Distancia da furta 1: "<<glm::distance2(m_bird.getPosition(), fruta1.getPosition())<<"\n";
-        if(glm::distance2(m_bird.getPosition(), fruta1.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta1.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta1.setIsLive(false);
         }
     }
     if(fruta2.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta2.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta2.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta2.setIsLive(false);
         }
     }
     if(fruta3.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta3.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta3.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta3.setIsLive(false);
         }
     }
     if(fruta4.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta4.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta4.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta4.setIsLive(false);
         }
     }
     if(fruta5.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta5.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta5.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta5.setIsLive(false);
         }
     }
     if(fruta6.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta6.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta6.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta6.setIsLive(false);
         }
     }
     if(fruta7.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta7.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta7.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta7.setIsLive(false);
         }
     }
     if(fruta8.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta8.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta8.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta8.setIsLive(false);
         }
     }
     if(fruta9.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta9.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta9.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta9.setIsLive(false);
         }
     }
     if(fruta10.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta10.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta10.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta10.setIsLive(false);
         }
     }
     if(fruta11.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta11.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta11.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta11.setIsLive(false);
         }
     }
     if(fruta12.getIsLive()){
-        if(glm::distance2(m_bird.getPosition(), fruta12.getPosition()) <= 12.0f ){
-            m_gameData.pontos += 1;
+        if(glm::distance2(m_bird.getPosition(), fruta12.getPosition()) <= 5.0f ){
+            m_gameData.m_pontos += 1;
             fruta12.setIsLive(false);
         }
     }
