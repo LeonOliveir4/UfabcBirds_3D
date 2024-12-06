@@ -8,6 +8,7 @@
 
 class ModelObj : public Model{
 public:
+  using Model::create;  // Exponha a versão base
   void create(GLuint program, std::string_view path, bool standardize = false);
 
 protected:

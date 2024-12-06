@@ -27,13 +27,13 @@ private:
     Ground m_ground;
     Camera m_camera;
     GLuint m_program{};
-    float m_dollySpeed{};
-    float m_truckSpeed{};
-    float m_panSpeed{};
-    float m_tiltSpeed{};
-    float m_elevationSpeed{};
+    //float m_dollySpeed{};
+    //float m_truckSpeed{};
+    //float m_panSpeed{};
+    //float m_tiltSpeed{};
+    //float m_elevationSpeed{};
 
-    bool m_go{false};
+    //bool m_go{false};
 
     void restartGame();
 };
