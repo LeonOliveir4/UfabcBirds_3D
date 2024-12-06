@@ -59,6 +59,8 @@ void Window::onCreate(){
     m_camera.setFollow(true);
     m_bird.create(m_program, assetsPath + "tucano/");
     m_ground.create(m_program);
+
+    showBirdInfo("Tucano");
 }
 
 void Window::onPaint() {
@@ -73,15 +75,48 @@ void Window::onPaint() {
 
 void Window::onPaintUI() {
     abcg::OpenGLWindow::onPaintUI();
+    if (m_showPopup) {
+        auto const popupWidth = 400.0f;
+        auto const popupHeight = 150.0f;
+        auto const popupPosX = 10.0f;
+        auto const popupPosY = 60.0f;
+
+        ImGui::SetNextWindowPos(ImVec2(popupPosX, popupPosY), ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ImVec2(popupWidth, popupHeight));
+
+        ImGuiWindowFlags const flagsPopup{ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize};
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.3f, 0.9f));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
+
+        ImGui::Begin("Popup", nullptr, flagsPopup);
+        ImGui::TextWrapped("%s", m_displayedText.c_str());
+        ImGui::End();
+
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
+    }
+
     {
         auto const widgetSize{ImVec2(218, 200)};
         ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x - widgetSize.x - 5, 5));
         ImGui::SetNextWindowSize(widgetSize);
         ImGui::Begin("Widget window", nullptr, ImGuiWindowFlags_NoDecoration);
-        if (m_gameData.m_state == State::GameOver) {
-            ImGui::Text("Game Over!");
-            ImGui::Text("Aperte Espaço para reiniciar.");
-        }
+    if (m_gameData.m_state == State::GameOver) {
+        auto const windowSize = ImVec2(300, 100);
+
+        auto const windowPos = ImVec2(
+            (m_viewportSize.x - windowSize.x) / 2.0f,
+            (m_viewportSize.y - windowSize.y) / 2.0f);
+
+        ImGui::SetNextWindowPos(windowPos, ImGuiCond_Always);
+        ImGui::SetNextWindowSize(windowSize);
+
+        ImGui::Begin("Game Over Screen", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
+        ImGui::Text("Game Over!");
+        ImGui::Text("Aperte ESPAÇO para reiniciar.");
+        ImGui::End();
+    }
+
         {
             ImGui::PushItemWidth(120);
             auto position = m_bird.getPosition();
@@ -106,6 +141,17 @@ void Window::onPaintUI() {
     }
 }
 
+void Window::showBirdInfo(const std::string& birdName) {
+    auto it = BirdDescriptions::descriptions.find(birdName);
+    if (it != BirdDescriptions::descriptions.end()) {
+        m_popupText = it->second;
+        m_displayedText.clear();
+        m_showPopup = true;
+        m_popupTimeElapsed = 0.0f;
+        m_currentCharIndex = 0;
+    }
+}
+
 
 void Window::restartGame() {
     m_gameData.m_state = State::Playing;
@@ -127,6 +173,19 @@ void Window::onUpdate() {
             glm::abs(m_bird.getPosition().z) > 25.0f) {
             m_gameData.m_state = State::GameOver;
             m_gameData.m_input.reset();
+        }
+    }
+
+    if (m_showPopup) {
+        m_popupTimeElapsed += deltaTime;
+        if (m_popupTimeElapsed >= m_textDisplaySpeed && m_currentCharIndex < m_popupText.size()) {
+            m_displayedText += m_popupText[m_currentCharIndex];
+            ++m_currentCharIndex;
+            m_popupTimeElapsed = 0.0f;  // Reseta o contador de tempo
+        }
+
+        if (m_currentCharIndex >= m_popupText.size() && m_popupTimeElapsed >= 5.0f) {
+            m_showPopup = false;
         }
     }
 }

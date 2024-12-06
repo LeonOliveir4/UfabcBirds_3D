@@ -8,6 +8,7 @@
 #include "model.hpp"
 #include "bird.hpp"
 #include "camera.hpp"
+#include "birdDescriptions.hpp"
 
 class Window : public abcg::OpenGLWindow {
 protected:
@@ -27,6 +28,15 @@ private:
     Ground m_ground;
     Camera m_camera;
     GLuint m_program{};
+    void showBirdInfo(const std::string& birdName);
+
+    bool m_showPopup{true};
+    float m_popupTimeElapsed{0.0f};
+    std::string m_popupText;
+    std::string m_displayedText;
+    size_t m_currentCharIndex{0};
+    float m_textDisplaySpeed{0.05f};
+
     //float m_dollySpeed{};
     //float m_truckSpeed{};
     //float m_panSpeed{};
