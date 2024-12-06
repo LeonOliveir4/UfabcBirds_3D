@@ -2,9 +2,11 @@
 #define WINDOW_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "gamedata.hpp"
 #include "ground.hpp"
 #include "modelObj.hpp"
 #include "model.hpp"
+#include "bird.hpp"
 #include "camera.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -16,11 +18,12 @@ protected:
     void onPaintUI() override;
     void onResize(glm::ivec2 const &size) override;
     void onDestroy() override;
+public:
+    GameData m_gameData; 
 
 private:
     glm::ivec2 m_viewportSize{};
-    ModelObj m_model;
-    Model m_model_test;
+    Bird m_bird;
     Ground m_ground;
     Camera m_camera;
     GLuint m_program{};
@@ -29,6 +32,10 @@ private:
     float m_panSpeed{};
     float m_tiltSpeed{};
     float m_elevationSpeed{};
+
+    bool m_go{false};
+
+    void restartGame();
 };
 
 #endif

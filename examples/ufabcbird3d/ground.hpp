@@ -2,19 +2,18 @@
 #define GROUND_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "camera.hpp"
+#include "model.hpp"
 
-class Ground {
+class Ground : public Model {
 public:
-  void create(GLuint program);
-  void render();
-  void destroy();
+  void createVertex() override;
+  void render(Camera camera) override;
 
-private:
-  GLuint m_VAO{};
-  GLuint m_VBO{};
-
-  GLint m_modelMatrixLoc{};
-  GLint m_colorLoc{};
+  float getLeftLimit() const { return -25.0f; } // Limite esquerdo
+  float getRightLimit() const { return 25.0f; } // Limite direito
+  float getBackLimit() const { return -25.0f; } // Limite traseiro
+  float getFrontLimit() const { return 25.0f; }
 };
 
 #endif

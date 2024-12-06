@@ -14,7 +14,7 @@ void main() {
     vec4 posEyeSpace = viewMatrix * modelMatrix * vec4(inPosition, 1);
 
     float i = 1.0 - (-posEyeSpace.z / 10.);
-    fragColor = vec4(i, i, i, 1.) * color;
+    fragColor = color ;//* vec4(i, i, i, 1.);
 
     gl_Position = projMatrix * posEyeSpace;
 }

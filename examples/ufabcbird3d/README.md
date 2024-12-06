@@ -56,20 +56,37 @@ Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fau
 
 ## Estrutura do Projeto
 ### Arquivos principais:
-- `CMakeLists.txt`: Configuração para compilação do projeto com CMake.
-- `main.cpp`: Função principal, inicializa a aplicação e a janela OpenGL.
-- **Câmera**:
+- **Código-Fonte**:
+  - `animation.cpp` e `animation.hpp`: Controlam animações específicas de elementos no jogo.
+  - `cena.cpp` e `cena.hpp`: Gerenciamento e renderização do cenário.
+  - `fruta.cpp` e `fruta.hpp`: Implementação das frutas que os pássaros coletam.
+  - `gamedata.cpp` e `gamedata.hpp`: Gerenciamento de estados e dados do jogo.
   - `camera.hpp` e `camera.cpp`: Classe responsável pela projeção e movimentação da câmera.
-- **Modelos 3D**:
   - `model.hpp` e `model.cpp`: Base para a criação de modelos com suporte a translação, rotação e escala.
   - `modelObj.hpp` e `modelObj.cpp`: Carregamento e manipulação de modelos OBJ.
+<<<<<<< HEAD
+  - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
+
+- **Assets**:
+  - **Modelos para cada passaro**:
+    - `asa_direita.obj`, `asa_direita.mtl`: Modelo e material da asa direita.
+    - `asa_esquerda.obj`, `asa_esquerda.mtl`: Modelo e material da asa esquerda.
+    - `bico.obj`: Modelo do bico.
+    - `corpo.obj`, `corpo.mtl`: Modelo e material do corpo.
+    - `rabo.obj`: Modelo do rabo.
+  - **Shaders**:
+    - `model.vert`: Vertex shader para renderização de objetos.
+    - `model.frag`: Fragment shader para renderização de objetos.
+=======
 - **Cenário**:
-  - `ground.hpp` e `ground.cpp`: Renderização de um grid quadriculado no plano XZ.
+  - `ground.hpp` e `ground.cpp`: Renderização de um solo base no plano XZ.
 - **Interface gráfica**:
   - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
 - Diretório `assets/`:
-  - `bird_test.obj`: Modelo de pássaro utilizado no projeto.
+  - `tucano/`: Modelo de pássaro utilizado no projeto.
+  - `arara/`: Modelo de pássaro utilizado no projeto.
   - `model.vert` e `model.frag`: Shaders para renderização de objetos.
+>>>>>>> e84fbf9 (camera)
 
 ---
 

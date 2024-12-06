@@ -12,6 +12,17 @@ void Camera::computeViewMatrix(){
     m_viewMatrix = glm::lookAt(m_eye, m_at, m_up);
 }
 
+void Camera::update(glm::vec3 targetPosition, glm::vec3 targetForward, glm::vec3 targetUpVector) {
+    if(m_isfollow){
+        m_at = targetPosition;
+        glm::vec3 backward = -glm::normalize( targetForward);
+        m_eye = targetPosition + (backward * m_backwardDistance) + (targetUpVector * m_upDistance);
+        m_up = targetUpVector;
+        computeViewMatrix();
+    }
+}
+
+
 void Camera::dolly(float speed){
     auto const forward{glm::normalize(m_at - m_eye)};
 
@@ -63,5 +74,12 @@ void Camera::tilt(float speed){
 
     m_at = transform * glm::vec4(m_at, 1.0f);
 
+    computeViewMatrix();
+}
+
+void Camera::reset() {
+    m_eye = glm::vec3(0.0f, 0.0f, 3.0f);
+    m_at = glm::vec3(0.0f);
+    m_up = glm::vec3(0.0f, 1.0f, 0.0f);
     computeViewMatrix();
 }
