@@ -17,6 +17,7 @@ public:
         // Getters
     const glm::vec3& getPosition() const { return m_position; }
     float getScale() const { return m_scale; }
+    bool getIsLive() const { return m_isLive; }
     glm::vec3 getPivot() const{return m_pivot;}
     const glm::mat4& getMatrixRotation() const { return m_matrixRotation; }
     const glm::mat4& getMasterMatrix() const { return m_masterMatrix; }
@@ -42,6 +43,10 @@ public:
     void setMatrixRotation(const glm::mat4& matrixRotation) {
         m_matrixRotation = matrixRotation;
         updateMasterMatrix();
+    }
+
+    void setDeath(bool live) {
+        m_isLive = live;
     }
 
 

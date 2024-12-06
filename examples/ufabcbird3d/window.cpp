@@ -232,3 +232,78 @@ void Window::onDestroy() {
    m_ground.destroy();
    m_bird.destroy();
 }
+
+void Window::checkCollisions(){
+    if(fruta1.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta1.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta1.setDeath(true);
+        }
+    }
+    if(fruta2.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta2.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta2.setDeath(true);
+        }
+    }
+    if(fruta3.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta3.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta3.setDeath(true);
+        }
+    }
+    if(fruta4.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta4.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta4.setDeath(true);
+        }
+    }
+    if(fruta5.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta5.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta5.setDeath(true);
+        }
+    }
+    if(fruta6.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta6.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta6.setDeath(true);
+        }
+    }
+    if(fruta7.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta7.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta7.setDeath(true);
+        }
+    }
+    if(fruta8.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta8.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta8.setDeath(true);
+        }
+    }
+    if(fruta9.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta9.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta9.setDeath(true);
+        }
+    }
+    if(fruta10.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta10.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta10.setDeath(true);
+        }
+    }
+    if(fruta11.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta11.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta11.setDeath(true);
+        }
+    }
+    if(fruta12.getIsLive()){
+        if(glm::distance2(m_bird.getPosition(), fruta12.getPosition()) <= 2.0f ){
+            m_gameData.pontos += 1;
+            fruta12.setDeath(true);
+        }
+    }
+}

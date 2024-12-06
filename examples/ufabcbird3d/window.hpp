@@ -22,6 +22,7 @@ protected:
     void onPaintUI() override;
     void onResize(glm::ivec2 const &size) override;
     void onDestroy() override;
+    void checkCollisions();
 public:
     GameData m_gameData; 
 
@@ -45,15 +46,16 @@ private:
     Camera m_camera;
     GLuint m_program{};
 
+    void showBirdInfo(const std::string& birdName);
 
-    float m_dollySpeed{};
-    float m_truckSpeed{};
-    float m_panSpeed{};
-    float m_tiltSpeed{};
-    float m_elevationSpeed{};
+    bool m_showPopup{true};
+    float m_popupTimeElapsed{0.0f};
+    std::string m_popupText;
+    std::string m_displayedText;
+    size_t m_currentCharIndex{0};
+    float m_textDisplaySpeed{0.05f};
 
-    bool m_go{false};
-
+    void restartGame();
     std::default_random_engine m_randomEngine;
     std::uniform_real_distribution<float> m_randomDist{-3.0f, 3.0f};
 };
