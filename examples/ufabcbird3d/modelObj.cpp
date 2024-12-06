@@ -10,37 +10,15 @@ template <> struct std::hash<Vertex> {
   }
 };
 
-void ModelObj::createBuffers() {
-  // Delete previous buffers
-  abcg::glDeleteBuffers(1, &m_EBO);
-  abcg::glDeleteBuffers(1, &m_VBO);
-
-  // VBO
-  abcg::glGenBuffers(1, &m_VBO);
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-  abcg::glBufferData(GL_ARRAY_BUFFER,
-                     sizeof(m_vertices.at(0)) * m_vertices.size(),
-                     m_vertices.data(), GL_STATIC_DRAW);
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // EBO
-  abcg::glGenBuffers(1, &m_EBO);
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  abcg::glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     sizeof(m_indices.at(0)) * m_indices.size(),
-                     m_indices.data(), GL_STATIC_DRAW);
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-void ModelObj::loadObj(std::string_view path, bool standardize) {
+void ModelObj::loadObj() {
   tinyobj::ObjReader reader;
 
-  if (!reader.ParseFromFile(path.data())) {
+  if (!reader.ParseFromFile(m_path.data())) {
     if (!reader.Error().empty()) {
       throw abcg::RuntimeError(
-          fmt::format("Failed to load model {} ({})", path, reader.Error()));
+          fmt::format("Failed to load model {} ({})", m_path, reader.Error()));
     }
-    throw abcg::RuntimeError(fmt::format("Failed to load model {}", path));
+    throw abcg::RuntimeError(fmt::format("Failed to load model {}", m_path));
   }
 
   if (!reader.Warning().empty()) {
@@ -83,73 +61,16 @@ void ModelObj::loadObj(std::string_view path, bool standardize) {
     }
   }
 
-  if (standardize) {
+  if (m_standardize) {
     ModelObj::standardize();
   }
-
-  createBuffers();
 }
 
-void ModelObj::render() const {
-  abcg::glBindVertexArray(m_VAO);
-  auto const colorLoc{abcg::glGetUniformLocation(m_program, "color")};
-  abcg::glUniform4f(colorLoc, m_color.r,m_color.g, m_color.b, m_color.a);
-  abcg::glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
-
-  abcg::glBindVertexArray(0);
-}
-
-void ModelObj::setupVAO(GLuint program) {
-  // Release previous VAO
+void ModelObj::create(GLuint program,std::string_view path, bool standardize){
   m_program = program;
-  m_modelMatrix = glm::scale(m_modelMatrix, glm::vec3(0.5f));
+  m_path = path;
+  m_standardize = standardize;
+  loadObj();
+  createBuffers();
 
-  abcg::glDeleteVertexArrays(1, &m_VAO);
-
-  // Create VAO
-  abcg::glGenVertexArrays(1, &m_VAO);
-  abcg::glBindVertexArray(m_VAO);
-
-  // Bind EBO and VBO
-  abcg::glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-
-  // Bind vertex attributes
-  auto const positionAttribute{
-      abcg::glGetAttribLocation(program, "inPosition")};
-  if (positionAttribute >= 0) {
-    abcg::glEnableVertexAttribArray(positionAttribute);
-    abcg::glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE,
-                                sizeof(Vertex), nullptr);
-  }
-
-  // End of binding
-  abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
-  abcg::glBindVertexArray(0);
-}
-
-void ModelObj::standardize() {
-  // Center to origin and normalize largest bound to [-1, 1]
-
-  // Get bounds
-  glm::vec3 max(std::numeric_limits<float>::lowest());
-  glm::vec3 min(std::numeric_limits<float>::max());
-  for (auto const &vertex : m_vertices) {
-    max = glm::max(max, vertex.position);
-    min = glm::min(min, vertex.position);
-  }
-
-  // Center and scale
-  auto const center{(min + max) / 2.0f};
-  auto const scaling{2.0f / glm::length(max - min)};
-  for (auto &vertex : m_vertices) {
-    //vertex.position = (vertex.position - center) * scaling;
-    vertex.position = (vertex.position) * scaling;
-  }
-}
-
-void ModelObj::destroy() const {
-  abcg::glDeleteBuffers(1, &m_EBO);
-  abcg::glDeleteBuffers(1, &m_VBO);
-  abcg::glDeleteVertexArrays(1, &m_VAO);
 }

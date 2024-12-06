@@ -65,9 +65,10 @@ void Window::onCreate(){
                                             .stage = abcg::ShaderStage::Vertex},
                                             {.source = assetsPath + "model.frag",
                                             .stage = abcg::ShaderStage::Fragment}});
-    m_model.loadObj(assetsPath + "bird_test.obj");
-    m_model_test.create(m_program);
-    m_model.setupVAO(m_program);
+    //m_model.loadObj(assetsPath + "bird_test.obj");
+    // m_modelObj.create(m_program, assetsPath + "bird_test.obj");
+    // m_model_test.create(m_program);
+    m_tucano.create(m_program, assetsPath + "tucano/");
     m_ground.create(m_program);
 }
 
@@ -75,11 +76,11 @@ void Window::onPaint() {
     abcg::glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     abcg::glViewport(0, 0, m_viewportSize.x, m_viewportSize.y);
 
-    m_model_test.render(m_camera);
-  
-    m_ground.render();
+    // m_model_test.render(m_camera);
+    // m_modelObj.render(m_camera);
+    m_tucano.render(m_camera);
+    m_ground.render(m_camera);
     abcg::glUseProgram(0); 
-
 }
 
 void Window::onPaintUI() {
@@ -92,8 +93,8 @@ void Window::onPaintUI() {
         {
              ImGui::PushItemWidth(120);
              auto fov  = m_camera.m_fov;
-             auto position = m_model_test.getPosition();
-             auto scale = m_model_test.getScale();
+             auto position = m_tucano.getPosition();
+             auto scale = m_tucano.getScale();
              static float rotationX{0.0f}; 
              static float rotationY{0.0f}; 
              static float rotationZ{0.0f}; 
@@ -106,7 +107,7 @@ void Window::onPaintUI() {
              ImGui::SliderFloat("Z_rotation", &rotationZ, -180.0f, 180.f); 
              ImGui::SliderFloat("scale", &scale, 0.0f, 5.f); 
 
-            m_model_test.setPosition(position);
+            m_tucano.setPosition(position);
             auto const radX = glm::radians(rotationX);
             auto const radY = glm::radians(rotationY);
             auto const radZ = glm::radians(rotationZ);
@@ -116,10 +117,10 @@ void Window::onPaintUI() {
             glm::mat4 rotationMatrixZ = glm::rotate(glm::mat4(1.0f), radZ, glm::vec3(0.0f, 0.0f, 1.0f));
 
             glm::mat4 rotationMatrix = rotationMatrixZ * rotationMatrixY * rotationMatrixX;
-            m_model_test.setPosition(position);
+            m_tucano.setPosition(position);
             m_camera.computeProjectionMatrix(m_viewportSize);
-            m_model_test.setMatrixRotation(rotationMatrix);
-            m_model_test.setScale(scale);
+            m_tucano.setMatrixRotation(rotationMatrix);
+            m_tucano.setScale(scale);
              
         }
         ImGui::End();
@@ -147,7 +148,8 @@ void Window::onResize(glm::ivec2 const &size) {
 }
 
 void Window::onDestroy() {
-    m_model_test.destroy();
-    m_ground.destroy();
-    m_model.destroy();
+    // m_model_test.destroy();
+   m_ground.destroy();
+   m_tucano.destroy();
+    // m_modelObj.destroy();
 }

@@ -5,6 +5,7 @@
 #include "ground.hpp"
 #include "modelObj.hpp"
 #include "model.hpp"
+#include "bird.hpp"
 #include "camera.hpp"
 
 class Window : public abcg::OpenGLWindow {
@@ -19,8 +20,7 @@ protected:
 
 private:
     glm::ivec2 m_viewportSize{};
-    ModelObj m_model;
-    Model m_model_test;
+    Bird m_tucano;
     Ground m_ground;
     Camera m_camera;
     GLuint m_program{};

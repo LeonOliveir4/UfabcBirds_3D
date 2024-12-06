@@ -2,19 +2,13 @@
 #define GROUND_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "camera.hpp"
+#include "model.hpp"
 
-class Ground {
+class Ground : public Model {
 public:
-  void create(GLuint program);
-  void render();
-  void destroy();
-
-private:
-  GLuint m_VAO{};
-  GLuint m_VBO{};
-
-  GLint m_modelMatrixLoc{};
-  GLint m_colorLoc{};
+  void createVertex() override;
+  void render(Camera camera) override;
 };
 
 #endif
