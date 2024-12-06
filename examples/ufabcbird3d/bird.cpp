@@ -14,6 +14,22 @@ void Bird::create(GLuint program, std::string bird_path, GameData const &gamedat
     m_asa_direita.setColor(glm::vec4(0.f, 0.f, 0.f , 1.0f));
     m_rabo.create(m_program, m_bird_path + "rabo.obj");
     m_rabo.setColor(glm::vec4(0.f, 0.f, 0.f , 1.0f));
+
+    //animate
+    std::vector<Keyframe> keyframes1 = {
+        {0.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(36.f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
+        {0.5f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-24.f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
+        {1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(36.f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)}
+    };
+
+    std::vector<Keyframe> keyframes2 = {
+        {0.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-36.0f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
+        {0.5f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(24.0f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
+        {1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-36.0f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)}
+    };
+
+    m_asa_esquerda_director.SetAnimation(std::make_shared<Animation>(keyframes1, 1.0f));
+    m_asa_direita_director.SetAnimation(std::make_shared<Animation>(keyframes2, 1.0f));
 }
 void Bird::render(Camera camera){
     m_bico.render(camera);
@@ -69,6 +85,7 @@ void Bird::update(float deltaTime, GameData const &gamedata) {
     }
     m_velocity = getFoward() * 2.0f;
     m_position += m_velocity * deltaTime;
+    updateAnimation(deltaTime);
 }
 void Bird::destroy(){
     m_bico.destroy();
@@ -76,4 +93,11 @@ void Bird::destroy(){
     m_asa_esquerda.destroy();
     m_asa_direita.destroy();
     m_rabo.destroy();
+}
+
+void Bird::updateAnimation(float deltaTime){
+    m_asa_esquerda_director.Update(deltaTime);
+    m_asa_direita_director.Update(deltaTime);
+    m_asa_esquerda.setAnimationMatrix(m_asa_esquerda_director.GetCurrentTransform());
+    m_asa_direita.setAnimationMatrix(m_asa_direita_director.GetCurrentTransform());
 }

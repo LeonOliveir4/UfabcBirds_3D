@@ -3,6 +3,7 @@
 
 #include "abcgOpenGL.hpp"
 #include "gamedata.hpp"
+#include "animation.hpp"
 #include "camera.hpp"
 #include "modelObj.hpp"
 
@@ -70,6 +71,11 @@ protected:
     float m_rollVelocity{0.1f};
     float m_yawVelocity{0.1f};
 
+    //animação
+    Director m_asa_esquerda_director;
+    Director m_asa_direita_director;
+
+    void updateAnimation(float deltaTime);
     void updateMasterMatrix() {
         m_masterMatrix = glm::translate(glm::mat4(1.0f), m_position)*glm::translate(glm::mat4(1.0f), -m_pivot)* m_matrixRotation *  glm::translate(glm::mat4(1.0f), m_pivot) * glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));
         m_bico.setMasterMatrix(m_masterMatrix);

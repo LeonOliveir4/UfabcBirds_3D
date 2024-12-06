@@ -23,6 +23,7 @@ public:
     float getScale() const { return m_scale; }
     glm::vec3 getPivot() const{return m_pivot;}
     const glm::mat4& getMatrixRotation() const { return m_matrixRotation; }
+    const glm::mat4& getAnimationMatrix() const { return m_animationMatrix; }
 
     // Getter para a matriz do modelo
     const glm::mat4& getModelMatrix() const { return m_modelMatrix; }
@@ -58,6 +59,11 @@ public:
         updateModelMatrix();
     }
 
+    void setAnimationMatrix(const glm::mat4& AnimationMatrix) {
+        m_animationMatrix = AnimationMatrix;
+        updateModelMatrix();
+    }
+
 protected:
 //Opengl buffers and program
     GLuint m_VAO{};
@@ -77,10 +83,11 @@ protected:
 //Index indices and vertex
     std::vector<Vertex> m_vertices;
     std::vector<GLuint> m_indices;
-
+//Matriz de animacao
+    glm::mat4 m_animationMatrix{1.0f};
     void standardize();
     void updateModelMatrix() {
-        m_modelMatrix = m_masterMatrix*glm::translate(glm::mat4(1.0f), m_position)*glm::translate(glm::mat4(1.0f), -m_pivot)* m_matrixRotation *  glm::translate(glm::mat4(1.0f), m_pivot) * glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));
+        m_modelMatrix = m_masterMatrix*m_animationMatrix*glm::translate(glm::mat4(1.0f), m_position)*glm::translate(glm::mat4(1.0f), -m_pivot)* m_matrixRotation *  glm::translate(glm::mat4(1.0f), m_pivot) * glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));
     }
 };
 #endif
