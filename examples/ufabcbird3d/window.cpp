@@ -59,7 +59,34 @@ void Window::onCreate(){
     m_camera.setFollow(true);
     m_bird.create(m_program, assetsPath + "tucano/");
     m_ground.create(m_program);
-
+    //frutas
+    auto &re{m_randomEngine}; 
+    std::uniform_real_distribution<float> randomHeight(0.1f, 15.0f);
+    std::uniform_real_distribution<float> randomPlane(-40.0f, 40.0f);
+    fruta1.create(m_program, assetsPath + "guarana/olho.obj",assetsPath + "guarana/olho_branco.obj",assetsPath + "guarana/casca.obj", glm::vec4(0.f,0.f,0.f,1.0f),glm::vec4(1.f,1.f,1.f,1.0f),glm::vec4(0.802f,0.f,0.184f,0.018f));
+    fruta1.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta2.create(m_program, assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj", glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f));
+    fruta2.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta3.create(m_program, assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj", glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f));
+    fruta3.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta4.create(m_program, assetsPath + "guarana/olho.obj",assetsPath + "guarana/olho_branco.obj",assetsPath + "guarana/casca.obj", glm::vec4(0.f,0.f,0.f,1.0f),glm::vec4(1.f,1.f,1.f,1.0f),glm::vec4(0.802f,0.f,0.184f,0.018f));
+    fruta4.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta5.create(m_program, assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj", glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f));
+    fruta5.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta6.create(m_program, assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj", glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f));
+    fruta6.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta7.create(m_program, assetsPath + "guarana/olho.obj",assetsPath + "guarana/olho_branco.obj",assetsPath + "guarana/casca.obj", glm::vec4(0.f,0.f,0.f,1.0f),glm::vec4(1.f,1.f,1.f,1.0f),glm::vec4(0.802f,0.f,0.184f,0.018f));
+    fruta7.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta8.create(m_program, assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj", glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f));
+    fruta8.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta9.create(m_program, assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj", glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f));
+    fruta9.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta10.create(m_program, assetsPath + "guarana/olho.obj",assetsPath + "guarana/olho_branco.obj",assetsPath + "guarana/casca.obj", glm::vec4(0.f,0.f,0.f,1.0f),glm::vec4(1.f,1.f,1.f,1.0f),glm::vec4(0.802f,0.f,0.184f,0.018f));
+    fruta10.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta11.create(m_program, assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj",assetsPath + "acai/acai.obj", glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f),glm::vec4(0.220f,0.006f,0.604f,1.f));
+    fruta11.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
+    fruta12.create(m_program, assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj",assetsPath + "jabuticaba/jabuticaba.obj", glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f),glm::vec4(0.373f,0.017f,0.497f,1.f));
+    fruta12.setPosition(glm::vec3(randomPlane(re),randomHeight(re),randomPlane(re)));
     showBirdInfo("Tucano");
 }
 

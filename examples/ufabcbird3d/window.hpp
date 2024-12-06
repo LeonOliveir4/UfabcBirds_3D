@@ -57,7 +57,6 @@ private:
 
     void restartGame();
     std::default_random_engine m_randomEngine;
-    std::uniform_real_distribution<float> m_randomDist{-3.0f, 3.0f};
 };
 
 #endif
