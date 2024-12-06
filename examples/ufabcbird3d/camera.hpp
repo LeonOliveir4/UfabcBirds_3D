@@ -12,12 +12,21 @@ public:
     void setFollow(bool is_follow){
         m_isfollow = is_follow;
     };
+    void setBackward(float distance){
+        m_backwardDistance = distance;
+    }
 
+    void setUp(float distance){
+        m_upDistance = distance;
+    }
     void dolly(float speed);
     void truck(float speed);
     void pan(float speed);
     void tilt(float speed);
     void elevation(float speed);
+
+    float const getBackwardDistance() const {return m_backwardDistance;}
+    float const getUpDistance() const {return m_upDistance;}
 
     glm::mat4 const &getViewMatrix() const {return m_viewMatrix;}
     glm::mat4 const &getProjMatrix() const {return m_projMatrix;}

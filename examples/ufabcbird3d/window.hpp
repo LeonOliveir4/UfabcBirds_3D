@@ -2,6 +2,7 @@
 #define WINDOW_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "gamedata.hpp"
 #include "ground.hpp"
 #include "modelObj.hpp"
 #include "model.hpp"
@@ -17,6 +18,8 @@ protected:
     void onPaintUI() override;
     void onResize(glm::ivec2 const &size) override;
     void onDestroy() override;
+public:
+    GameData m_gameData; 
 
 private:
     glm::ivec2 m_viewportSize{};

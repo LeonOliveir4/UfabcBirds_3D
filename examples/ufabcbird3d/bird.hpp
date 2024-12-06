@@ -2,14 +2,15 @@
 #define BIRD_HPP_
 
 #include "abcgOpenGL.hpp"
+#include "gamedata.hpp"
 #include "camera.hpp"
 #include "modelObj.hpp"
 
 class Bird {
 public:
-    virtual void create(GLuint program, std::string bird_path);
+    virtual void create(GLuint program, std::string bird_path, GameData const &gamedata);
     virtual void render(Camera camera);
-    void update(float deltaTime);
+    void update(float deltaTime, GameData const &gamedata);
     void pitch(float speed); //rotacao em x
     void roll(float speed); // rotacao em z
     void yaw(float speed); // rotacao em y
@@ -64,6 +65,10 @@ protected:
     glm::mat4 m_masterMatrix{1.f};
     //Phisics
     glm::vec3 m_velocity{0.f};
+
+    float m_pitchVelocity{0.1f};
+    float m_rollVelocity{0.1f};
+    float m_yawVelocity{0.1f};
 
     void updateMasterMatrix() {
         m_masterMatrix = glm::translate(glm::mat4(1.0f), m_position)*glm::translate(glm::mat4(1.0f), -m_pivot)* m_matrixRotation *  glm::translate(glm::mat4(1.0f), m_pivot) * glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));

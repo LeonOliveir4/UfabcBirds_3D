@@ -5,13 +5,35 @@
 void Window::onEvent(SDL_Event const &event) {
   if (event.type == SDL_KEYDOWN) {
     if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)
-      m_dollySpeed = 1.0f;
+      m_gameData.m_input.set(gsl::narrow<size_t>(Input::PitchPos));
+    if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s)
+      m_gameData.m_input.set(gsl::narrow<size_t>(Input::PitchNeg));
+    if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a)
+      m_gameData.m_input.set(gsl::narrow<size_t>(Input::YawPos));
+    if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d)
+      m_gameData.m_input.set(gsl::narrow<size_t>(Input::YawNeg));
+    if (event.key.keysym.sym == SDLK_q)
+      m_gameData.m_input.set(gsl::narrow<size_t>(Input::RollPos));
+    if (event.key.keysym.sym == SDLK_e)
+      m_gameData.m_input.set(gsl::narrow<size_t>(Input::RollNeg));
   }
   if (event.type == SDL_KEYUP) {
-    if ((event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w) &&
-        m_dollySpeed > 0)
-      m_dollySpeed = 0.0f;
+    if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w) 
+      m_gameData.m_input.reset(gsl::narrow<size_t>(Input::PitchPos));
+    if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s)
+      m_gameData.m_input.reset(gsl::narrow<size_t>(Input::PitchNeg));
+    if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a)
+      m_gameData.m_input.reset(gsl::narrow<size_t>(Input::YawPos));
+    if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d)
+      m_gameData.m_input.reset(gsl::narrow<size_t>(Input::YawNeg));
+    if (event.key.keysym.sym == SDLK_q)
+      m_gameData.m_input.reset(gsl::narrow<size_t>(Input::RollPos));
+    if (event.key.keysym.sym == SDLK_e)
+      m_gameData.m_input.reset(gsl::narrow<size_t>(Input::RollNeg));
+  }
+
 }
+
 
 
 void Window::onCreate(){
@@ -26,7 +48,7 @@ void Window::onCreate(){
                                             .stage = abcg::ShaderStage::Fragment}});
 
     m_camera.setFollow(true);
-    m_bird.create(m_program, assetsPath + "tucano/");
+    m_bird.create(m_program, assetsPath + "tucano/", m_gameData);
     m_ground.create(m_program);
 }
 
@@ -48,35 +70,27 @@ void Window::onPaintUI() {
         ImGui::SetNextWindowSize(widgetSize);
         ImGui::Begin("Widget window", nullptr, ImGuiWindowFlags_NoDecoration);
         {
-             ImGui::PushItemWidth(120);
-             auto fov  = m_camera.m_fov;
-             auto position = m_bird.getPosition();
-             auto scale = m_bird.getScale();
-             static float rotationX{0.0f}; 
-             static float rotationY{0.0f}; 
-             static float rotationZ{0.0f}; 
-             ImGui::SliderFloat("FOV", &m_camera.m_fov, 10.f, 180.f); 
-             ImGui::SliderFloat("X_position", &position.x, -10.0f, 10.f);
-             ImGui::SliderFloat("Y_position", &position.y, -10.0f, 10.f);
-             ImGui::SliderFloat("Z_position", &position.z, -10.0f, 10.f); 
-             ImGui::SliderFloat("X_rotation", &rotationX, -180.0f, 180.f);
-             ImGui::SliderFloat("Y_rotation", &rotationY, -180.0f, 180.f);
-             ImGui::SliderFloat("Z_rotation", &rotationZ, -180.0f, 180.f); 
-             ImGui::SliderFloat("scale", &scale, 0.0f, 5.f); 
+            ImGui::PushItemWidth(120);
+            auto fov  = m_camera.m_fov;
+            auto position = m_bird.getPosition();
+            auto scale = m_bird.getScale();
 
-            m_bird.setPosition(position);
-            auto const radX = glm::radians(rotationX);
-            auto const radY = glm::radians(rotationY);
-            auto const radZ = glm::radians(rotationZ);
+            static float cameraUp = m_camera.getUpDistance();
+            static float cameraBack = m_camera.getBackwardDistance();
+            ImGui::SliderFloat("FOV", &m_camera.m_fov, 10.f, 180.f); 
+            ImGui::SliderFloat("X_position", &position.x, -10.0f, 10.f);
+            ImGui::SliderFloat("Y_position", &position.y, -10.0f, 10.f);
+            ImGui::SliderFloat("Z_position", &position.z, -10.0f, 10.f); 
 
-            glm::mat4 rotationMatrixX = glm::rotate(glm::mat4(1.0f), radX, glm::vec3(1.0f, 0.0f, 0.0f));
-            glm::mat4 rotationMatrixY = glm::rotate(glm::mat4(1.0f), radY, glm::vec3(0.0f, 1.0f, 0.0f));
-            glm::mat4 rotationMatrixZ = glm::rotate(glm::mat4(1.0f), radZ, glm::vec3(0.0f, 0.0f, 1.0f));
+            ImGui::SliderFloat("Camera_up", &cameraUp, -10.0f, 10.f);
+            ImGui::SliderFloat("Camera_back", &cameraBack, -10.0f, 10.f);
 
-            glm::mat4 rotationMatrix = rotationMatrixZ * rotationMatrixY * rotationMatrixX;
-            m_bird.setPosition(position);
+            m_camera.setUp(cameraUp);
+            m_camera.setBackward(cameraBack); 
+
+
             m_camera.computeProjectionMatrix(m_viewportSize);
-            m_bird.setMatrixRotation(rotationMatrix);
+            //m_bird.setMatrixRotation(rotationMatrix);
             m_bird.setScale(scale);
              
         }
@@ -98,12 +112,7 @@ void Window::onUpdate() {
   m_camera.tilt(m_tiltSpeed * deltaTime);
   m_camera.elevation(m_elevationSpeed * deltaTime);
 
-  if (m_go == true) {
-    m_bird.go();
-  }else {
-    m_bird.pause();
-  }
-  m_bird.update(deltaTime);
+  m_bird.update(deltaTime, m_gameData);
   m_camera.update(m_bird.getPosition(),m_bird.getFoward(), m_bird.getUpVector());
 }
 
