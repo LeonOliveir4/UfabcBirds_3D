@@ -3,58 +3,85 @@
 <img src="" alt="Imagem do projeto">
 </div>
 
-**Disciplina**: Computação Gráfica  
+## Disciplina
+**Computação Gráfica**  
 **Professor**: Celso Setsuo Kurashima  
 **Período**: 2024.3  
 
+---
+
 ## Desenvolvedores
-- Leonardo Pires de Oliveira - 11201920744
-- Leopoldo Kenji Sugata Naves - 11201722022
+- Leonardo Pires de Oliveira - 11201920744  
+- Leopoldo Kenji Sugata Naves - 11201722022  
+
+---
 
 ## Descrição do Projeto
-Este projeto foi desenvolvido como parte das atividades práticas da disciplina de Computação Gráfica. O objetivo é criar uma versão personalizada do jogo Flappy Bird, com diversificação de espécies, e tendo como protagonista a fauna brasileira, utilizando a biblioteca ABCg e OpenGL para renderização gráfica.
+O **UfabcBirds3D** é um projeto desenvolvido como parte da disciplina de Computação Gráfica, que implementa uma aplicação com gráficos 3D utilizando **OpenGL** e a biblioteca **ABCg**. O projeto inclui transformações geométricas para manipulação e animação de objetos 3D, bem como a gestão de estados do jogo, como `gameOver` e `playing`.
 
-O jogo apresenta algumas diferenças em relação ao Flappy Bird clássico, como:
-- Diversificação de espécies, com personagens inspirados em aves brasileiras.
-- Obstáculos personalizados, incluindo variações que representam desafios adicionais para o jogador.
+Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fauna e a flora brasileiras. Os jogadores poderão controlar espécies de pássaros brasileiros, como o tucano, e interagir com frutas características da flora nacional, promovendo conscientização ambiental e cultural.
 
-O jogo foi implementado em C++ e segue uma estrutura modular para facilitar a expansão de funcionalidades e mecânicas de jogo.
+### Objetivos do Projeto:
+1. **Renderização de gráficos 3D**: Criação de modelos tridimensionais e renderização no espaço 3D.
+2. **Transformações geométricas**: Implementação de translações, rotações e escalas nos objetos.
+3. **Animações**: Manipulação contínua de objetos e câmera para criar uma experiência dinâmica.
+4. **Jogabilidade**:
+   - Controle de pássaros 3D que coletam frutas espalhadas pelo cenário.
+   - Disponibilidade de pelo menos **duas espécies jogáveis de pássaros brasileiros**.
+   - Inclusão futura de frutas representativas da flora brasileira.
+5. **Estados do jogo**: Inclusão de `gameOver` e `playing`, controlando o fluxo da aplicação.
+6. **Educação**: 
+   - Promover conhecimento sobre a biodiversidade brasileira, com destaque inicial para o **tucano**.
+   - Criar uma experiência interativa que incentive o aprendizado sobre espécies de aves e frutas brasileiras.
 
-## Estados do Jogo
-O projeto utiliza a estrutura `gameData` para gerenciar os estados principais e a interação do jogo:
-- **Playing**: Indica quando o jogo está em execução, com o jogador controlando o pássaro e interagindo com os obstáculos.
-- **GameOver**: Estado que ocorre quando o pássaro colide com um obstáculo ou com os limites da tela, finalizando a rodada.
-- **Interação "Up"**: O estado "up" também é gerenciado dentro de `gameData`, permitindo ao jogador realizar o impulso para cima ao pressionar uma tecla ou botão específico. Essa ação é essencial para controlar a altura do personagem e evitar colisões.
+---
 
-Esses estados permitem uma transição organizada entre o início e o fim do jogo, além de facilitar o controle da lógica de reinicialização e feedback para o jogador.
+## Funcionalidades
+- **Gráficos 3D**: Representação visual de modelos tridimensionais, como aves brasileiras.
+- **Transformações geométricas**:
+  - Controle de posição (translação), escala e rotação dos objetos em tempo real.
+  - Movimentação da câmera no ambiente tridimensional.
+- **Animação**: Alteração contínua das propriedades dos objetos para criar movimento.
+- **Jogabilidade**:
+  - Coleta de frutas pelo chão, contabilizando a pontuação do jogador.
+  - Escolha entre duas espécies de pássaros brasileiros, cada uma com animações e características específicas.
+- **Estados do jogo**:
+  - **`playing`**: Estado principal, onde o jogador interage com o ambiente 3D para coletar frutas.
+  - **`gameOver`**: Estado de término, ativado ao alcançar uma condição específica no jogo (ex.: limite de tempo ou colisão).
+- **Educação**:
+  - Representação do **tucano** como exemplo de ave brasileira.
+  - Planejamento para adicionar frutas nativas, como o açaí e a jabuticaba, para enriquecer o cenário e promover o aprendizado.
 
-## Mecânica de Interação
-A principal interação do jogador no UfabcBirds é a ação de "ir para cima" (ou "up"), gerenciada pelo `gameData`. Ao pressionar uma tecla ou botão específico, o personagem (pássaro) realiza um impulso para cima, ajudando-o a desviar dos obstáculos e a manter-se dentro do cenário. Essa interação é essencial para a jogabilidade, permitindo ao jogador controlar a altura do personagem e evitar colisões.
-
-## Mecânica de Colisão
-O sistema de colisão foi implementado para detectar o contato entre o pássaro e os obstáculos, assim como entre o pássaro e os limites do cenário. Esse recurso é fundamental para a jogabilidade, garantindo que o jogo termine adequadamente ao detectar uma colisão. A lógica de colisão está localizada na classe `Window`, e uma versão mais completa do sistema de colisão está sendo trabalhada em outra branch do repositório para ajustes adicionais.
+---
 
 ## Estrutura do Projeto
-O projeto está organizado da seguinte maneira:
+### Arquivos principais:
+- `CMakeLists.txt`: Configuração para compilação do projeto com CMake.
+- `main.cpp`: Função principal, inicializa a aplicação e a janela OpenGL.
+- **Câmera**:
+  - `camera.hpp` e `camera.cpp`: Classe responsável pela projeção e movimentação da câmera.
+- **Modelos 3D**:
+  - `model.hpp` e `model.cpp`: Base para a criação de modelos com suporte a translação, rotação e escala.
+  - `modelObj.hpp` e `modelObj.cpp`: Carregamento e manipulação de modelos OBJ.
+- **Cenário**:
+  - `ground.hpp` e `ground.cpp`: Renderização de um grid quadriculado no plano XZ.
+- **Interface gráfica**:
+  - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
+- Diretório `assets/`:
+  - `bird_test.obj`: Modelo de pássaro utilizado no projeto.
+  - `model.vert` e `model.frag`: Shaders para renderização de objetos.
 
-- `CMakeLists.txt`: Script de configuração para o CMake, que compila o projeto.
-- `README.md`: Documentação inicial do projeto.
-- `main.cpp`: Contém a função principal do jogo, que inicializa a janela e as configurações básicas do OpenGL.
-- `window.hpp` e `window.cpp`: Declaram e implementam a classe `Window`, responsável por controlar o loop de jogo, renderização dos objetos, lógica de colisão, interação com o usuário e controle da ação de "ir para cima".
-
-## Tecnologias Utilizadas
-- **Linguagem**: C++
-- **Biblioteca Gráfica**: OpenGL
-- **Biblioteca de Suporte**: ABCg (biblioteca fornecida pelo professor)
-- **Plataforma de Desenvolvimento**: Linux
-- **IDE**: Visual Studio
+---
 
 ## Como Executar o Projeto
-Clone este repositório no seu ambiente local:
-```bash
-git clone [[URL do repositório]](https://github.com/LeonOliveir4/UfabcBirds_2D/tree/CenarioInicial_FlappyBird)
-```
-build:
-```bash
-./build.sh (linux); build.bat (windows)
-```
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/LeonOliveir4/UfabcBirds_3D.git
+
+2. Rodar o código:
+   ```bash
+   ./build.sh (Linux) ou build.bat (Windows)
+
+3. Executar o jogo:
+   ```bash
+   ./build/bin/ufabcbird3d/ufabcbird3d
