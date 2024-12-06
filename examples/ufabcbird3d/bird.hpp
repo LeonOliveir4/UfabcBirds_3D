@@ -9,6 +9,10 @@ class Bird {
 public:
     virtual void create(GLuint program, std::string bird_path);
     virtual void render(Camera camera);
+    void update(float deltaTime);
+    void pitch(float speed); //rotacao em x
+    void roll(float speed); // rotacao em z
+    void yaw(float speed); // rotacao em y
     virtual void destroy();
 
         // Getters
@@ -16,6 +20,10 @@ public:
     float getScale() const { return m_scale; }
     glm::vec3 getPivot() const{return m_pivot;}
     const glm::mat4& getMatrixRotation() const { return m_matrixRotation; }
+    const glm::mat4& getMasterMatrix() const { return m_masterMatrix; }
+    const glm::vec3 getUpVector() {return glm::normalize(glm::vec3(m_masterMatrix[1]));}
+    const glm::vec3 getFoward() {return -glm::normalize(glm::vec3(m_matrixRotation[2]));}
+
 
     // Setters
     void setPosition(const glm::vec3& position) {
@@ -37,6 +45,8 @@ public:
         updateMasterMatrix();
     }
 
+
+
 protected:
     ModelObj m_bico;
     ModelObj m_asa_esquerda;
@@ -45,14 +55,15 @@ protected:
     ModelObj m_rabo;
 
     std::string m_bird_path;
-
+    //geometrics
     GLint m_program;
     glm::vec3 m_position{0.f, 0.f, 0.f};
     float m_scale{1.f};
     glm::mat4 m_matrixRotation{1.0f};
     glm::vec3 m_pivot{0.f, 0.f, 0.f};
-    
     glm::mat4 m_masterMatrix{1.f};
+    //Phisics
+    glm::vec3 m_velocity{0.f};
 
     void updateMasterMatrix() {
         m_masterMatrix = glm::translate(glm::mat4(1.0f), m_position)*glm::translate(glm::mat4(1.0f), -m_pivot)* m_matrixRotation *  glm::translate(glm::mat4(1.0f), m_pivot) * glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));

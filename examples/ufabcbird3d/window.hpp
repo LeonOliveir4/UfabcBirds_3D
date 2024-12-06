@@ -20,7 +20,7 @@ protected:
 
 private:
     glm::ivec2 m_viewportSize{};
-    Bird m_tucano;
+    Bird m_bird;
     Ground m_ground;
     Camera m_camera;
     GLuint m_program{};
@@ -29,6 +29,8 @@ private:
     float m_panSpeed{};
     float m_tiltSpeed{};
     float m_elevationSpeed{};
+
+    bool m_go{false};
 };
 
 #endif

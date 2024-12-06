@@ -21,6 +21,12 @@ void Bird::render(Camera camera){
     m_asa_direita.render(camera);
     m_rabo.render(camera);
 }
+
+
+void Bird::update(float deltaTime) {
+    m_velocity = getFoward() * 2.0f;
+    m_position += m_velocity * deltaTime;
+}
 void Bird::destroy(){
     m_bico.destroy();
     m_corpo.destroy();

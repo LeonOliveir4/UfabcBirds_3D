@@ -8,6 +8,10 @@ class Camera {
 public:
     void computeViewMatrix();
     void computeProjectionMatrix(glm::vec2 const &size);
+    void update(glm::vec3 targetPosition, glm::vec3 targetForward, glm::vec3 targetUpVector);
+    void setFollow(bool is_follow){
+        m_isfollow = is_follow;
+    };
 
     void dolly(float speed);
     void truck(float speed);
@@ -27,5 +31,9 @@ private:
 
     glm::mat4 m_viewMatrix;
     glm::mat4 m_projMatrix;
+
+    float  m_backwardDistance{5.0f};
+    float m_upDistance{5.0f};
+    bool m_isfollow{false};
 };
 #endif

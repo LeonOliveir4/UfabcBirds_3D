@@ -64,6 +64,7 @@ Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fau
   - `camera.hpp` e `camera.cpp`: Classe responsável pela projeção e movimentação da câmera.
   - `model.hpp` e `model.cpp`: Base para a criação de modelos com suporte a translação, rotação e escala.
   - `modelObj.hpp` e `modelObj.cpp`: Carregamento e manipulação de modelos OBJ.
+<<<<<<< HEAD
   - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
 
 - **Assets**:
@@ -76,6 +77,16 @@ Além do aspecto técnico, o projeto tem um caráter educativo, destacando a fau
   - **Shaders**:
     - `model.vert`: Vertex shader para renderização de objetos.
     - `model.frag`: Fragment shader para renderização de objetos.
+=======
+- **Cenário**:
+  - `ground.hpp` e `ground.cpp`: Renderização de um solo base no plano XZ.
+- **Interface gráfica**:
+  - `window.hpp` e `window.cpp`: Controle do ciclo de vida da aplicação, eventos do usuário, lógica de renderização e gerenciamento de estados.
+- Diretório `assets/`:
+  - `tucano/`: Modelo de pássaro utilizado no projeto.
+  - `arara/`: Modelo de pássaro utilizado no projeto.
+  - `model.vert` e `model.frag`: Shaders para renderização de objetos.
+>>>>>>> e84fbf9 (camera)
 
 ---
 
