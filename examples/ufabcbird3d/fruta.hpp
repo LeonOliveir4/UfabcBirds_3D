@@ -45,7 +45,7 @@ public:
         updateMasterMatrix();
     }
 
-    void setDeath(bool live) {
+    void setIsLive(bool live) {
         m_isLive = live;
     }
 

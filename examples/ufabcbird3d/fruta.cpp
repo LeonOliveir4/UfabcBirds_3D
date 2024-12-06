@@ -33,6 +33,10 @@ void Fruta::update(float deltaTime, GameData const &gamedata){
         m_fruta_3.setAnimationMatrix(m_morre_animation.GetCurrentTransform());
         m_timer -= deltaTime; 
     }
+
+    if(m_isLive == false  && m_timer <= 0){
+        destroy();
+    }
 }
 void Fruta::destroy(){
     m_fruta_1.destroy();
