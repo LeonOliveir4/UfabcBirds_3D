@@ -18,18 +18,18 @@ void Bird::create(GLuint program, std::string bird_path){
     //animate
     std::vector<Keyframe> keyframes1 = {
         {0.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(36.f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
-        {0.5f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-24.f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
-        {1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(36.f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)}
+        {0.25f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-24.f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
+        {0.5f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(36.f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)}
     };
 
     std::vector<Keyframe> keyframes2 = {
         {0.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-36.0f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
-        {0.5f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(24.0f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
-        {1.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-36.0f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)}
+        {0.25f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(24.0f),  glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)},
+        {0.5f, glm::vec3(0.0f, 0.0f, 0.0f), glm::rotate(glm::mat4(1.0f), glm::radians(-36.0f), glm::vec3(0.f, 0.0f, 1.0f)), glm::vec3(1.0f)}
     };
 
-    m_asa_esquerda_director.SetAnimation(std::make_shared<Animation>(keyframes1, 1.0f));
-    m_asa_direita_director.SetAnimation(std::make_shared<Animation>(keyframes2, 1.0f));
+    m_asa_esquerda_director.SetAnimation(std::make_shared<Animation>(keyframes1, 0.5f));
+    m_asa_direita_director.SetAnimation(std::make_shared<Animation>(keyframes2, 0.5f));
 }
 void Bird::render(Camera camera){
     m_bico.render(camera);
@@ -62,27 +62,21 @@ void Bird::update(float deltaTime, GameData &gamedata) {
     if (gamedata.m_state != State::Playing) return;
     
     if (gamedata.m_input[gsl::narrow<size_t>(Input::PitchPos)]) {
-        std::cout << "PitchPos" <<"\n";
         pitch(m_pitchVelocity);
     }
     if (gamedata.m_input[gsl::narrow<size_t>(Input::PitchNeg)]) {
-        std::cout << "PitchNeg" <<"\n";
         pitch(-m_pitchVelocity);
     }
     if (gamedata.m_input[gsl::narrow<size_t>(Input::YawPos)]) {
-        std::cout << "YawPos" <<"\n";
         yaw(m_yawVelocity);
     }
     if (gamedata.m_input[gsl::narrow<size_t>(Input::YawNeg)]) {
-        std::cout << "YawNeg" <<"\n";
         yaw(-m_yawVelocity);
     }
     if (gamedata.m_input[gsl::narrow<size_t>(Input::RollPos)]) {
-        std::cout << "RollPos" <<"\n";
         roll(m_rollVelocity);
     }
     if (gamedata.m_input[gsl::narrow<size_t>(Input::RollNeg)]) {
-        std::cout << "RollNeg" <<"\n";
         roll(-m_rollVelocity);
     }
     // Simula gravidade para o pássaro (se necessário)
@@ -100,10 +94,10 @@ void Bird::update(float deltaTime, GameData &gamedata) {
         gamedata.m_state = State::GameOver;
     }
 
-    float leftLimit = -25.0f;
-    float rightLimit = 25.0f;
-    float backLimit = -25.0f;
-    float frontLimit = 25.0f;
+    float leftLimit = -125.0f;
+    float rightLimit = 125.0f;
+    float backLimit = -125.0f;
+    float frontLimit = 125.0f;
 
     if (m_position.x < leftLimit || m_position.x > rightLimit || 
         m_position.z < backLimit || m_position.z > frontLimit) {
