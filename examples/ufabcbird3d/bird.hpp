@@ -69,9 +69,9 @@ protected:
     //Phisics
     glm::vec3 m_velocity{0.f};
 
-    float m_pitchVelocity{0.08f};
-    float m_rollVelocity{0.08f};
-    float m_yawVelocity{0.02f};
+    float m_pitchVelocity{0.80f};
+    float m_rollVelocity{0.80f};
+    float m_yawVelocity{0.40f};
 
     //animação
     Director m_asa_esquerda_director;
